@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Activity,
   Calculator,
+  FileText,
 } from 'lucide-react';
 
 interface ToolGridProps {
@@ -34,6 +35,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
 
   const categories: Array<{ id: ToolCategory; labelEn: string; labelZh: string }> = [
     { id: 'all', labelEn: 'All Calculators', labelZh: '全部计算器' },
+    { id: 'academic', labelEn: 'Academic & Typography', labelZh: '学术与排版' },
     { id: 'geometry', labelEn: 'Geometry & Shapes', labelZh: '几何与图形' },
     { id: 'algebra', labelEn: 'Algebra & Equations', labelZh: '代数与方程' },
     { id: 'trigonometry', labelEn: 'Trigonometry', labelZh: '三角函数' },
@@ -78,6 +80,8 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
         return <TrendingUp {...props} />;
       case 'Activity':
         return <Activity {...props} />;
+      case 'FileText':
+        return <FileText {...props} />;
       default:
         return <Calculator {...props} />;
     }

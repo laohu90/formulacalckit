@@ -2,6 +2,22 @@ import { ToolItem } from '../types';
 
 export const INITIAL_TOOLS: ToolItem[] = [
   {
+    id: 'mathbridge',
+    nameEn: 'MathBridge Formula Typography Tool',
+    nameZh: '数学公式排版工具 (MathBridge)',
+    category: 'academic',
+    formula: '\\LaTeX \\rightarrow MathML / Word',
+    descriptionEn:
+      'Academic math formula editor and converter supporting LaTeX, Word OMML, MathML, and instant typography formatting.',
+    descriptionZh:
+      'LaTeX / Word / MathML 论文级数学公式排版与转换套件，支持学术公式实时预览与导出。',
+    subdomainUrl: 'https://mathbridge.formulacalckit.com/',
+    iconName: 'FileText',
+    tags: ['LaTeX', 'Typography', 'MathML', 'Word OMML'],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'mathbridge.formulacalckit.com',
+  },
+  {
     id: 'pythagorean-calculator',
     nameEn: 'Pythagorean Theorem Calculator',
     nameZh: '勾股定理计算器',
@@ -11,7 +27,7 @@ export const INITIAL_TOOLS: ToolItem[] = [
       'Calculate missing hypotenuse or legs with exact radical simplification, step-by-step mathematical proofs, and triples table.',
     descriptionZh:
       '求直角三角形任意边长，支持最简二次根号化简（如 2√5）、逐步几何推导与勾股数查询。',
-    subdomainUrl: 'https://pythagorean-calculator.formulacalckit.com',
+    subdomainUrl: 'https://pythagorean-calculator.formulacalckit.com/',
     quickSolverId: 'pythagorean',
     iconName: 'Triangle',
     tags: ['Right Triangle', 'Hypotenuse', 'Radicals', 'Triples'],
@@ -28,12 +44,12 @@ export const INITIAL_TOOLS: ToolItem[] = [
       'Find real and complex roots, discriminant Δ, vertex coordinates, and step-by-step factoring or quadratic formula solutions.',
     descriptionZh:
       '快速解一元二次方程，输出实根与复数根、判别式 Δ、顶点坐标及十字相乘/配方过程。',
-    subdomainUrl: 'https://quadratic.formulacalckit.com',
+    subdomainUrl: 'https://quadratic-solver.formulacalckit.com/',
     quickSolverId: 'quadratic',
     iconName: 'FunctionSquare',
     tags: ['Roots', 'Discriminant', 'Parabola', 'Factoring'],
     isVerifiedSubdomain: true,
-    dnsRecordName: 'quadratic.formulacalckit.com',
+    dnsRecordName: 'quadratic-solver.formulacalckit.com',
   },
   {
     id: 'circle-sphere-calc',

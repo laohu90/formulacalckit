@@ -4,7 +4,8 @@ export type ToolCategory =
   | 'algebra'
   | 'trigonometry'
   | 'physics'
-  | 'finance';
+  | 'finance'
+  | 'academic';
 
 export interface ToolItem {
   id: string;
@@ -29,6 +30,22 @@ export type QuickSolverId =
   | 'trigonometry'
   | 'ohms_law'
   | 'percentage';
+
+export interface WorkerSubsiteTool {
+  subdomain: string;
+  domain: string;
+  url: string;
+  title: string;
+  desc: string;
+  icon?: string;
+  category?: string;
+}
+
+export interface WorkerApiResponse {
+  success: boolean;
+  count: number;
+  tools: WorkerSubsiteTool[];
+}
 
 export interface CloudflareDnsRecord {
   id: string;
