@@ -32,6 +32,35 @@ export const INITIAL_TOOLS: ToolItem[] = [
     dnsRecordName: 'linear-function-calculator.formulacalckit.com',
   },
   {
+    id: 'linear-system-solver',
+    nameEn: 'Linear System Solver (2x2)',
+    nameZh: '二元一次方程组求解器',
+    category: 'algebra',
+    formula: '\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}',
+    descriptionEn:
+      'Step-by-step 2x2 linear system solver with substitution & elimination methods, exact fractions, 2D graph intersection, and practice quizzes.',
+    descriptionZh:
+      '二元一次方程组带步骤求解，支持代入消元法与加减消元法、精确分数化简、2D函数图象交点可视化与互动练习。',
+    subdomainUrl: 'https://linear-system-solver.formulacalckit.com/',
+    iconName: 'Grid',
+    tags: [
+      'Linear System',
+      'Simultaneous Equations',
+      'Substitution',
+      'Elimination',
+      '2x2 System',
+      '二元一次方程组',
+      '消元法',
+      '代入法',
+      '加减消元',
+      '方程组求解',
+      '初中代数',
+      'algebra',
+    ],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'linear-system-solver.formulacalckit.com',
+  },
+  {
     id: 'sector-calculator',
     nameEn: 'Sector Area & Arc Length Calculator',
     nameZh: '扇形面积与弧长计算器',
@@ -60,7 +89,6 @@ export const INITIAL_TOOLS: ToolItem[] = [
     isVerifiedSubdomain: true,
     dnsRecordName: 'sector-calculator.formulacalckit.com',
   },
-
   {
     id: 'mathbridge',
     nameEn: 'MathBridge Formula Typography Tool',
@@ -75,7 +103,6 @@ export const INITIAL_TOOLS: ToolItem[] = [
     iconName: 'FileText',
     tags: [
       'LaTeX',
-      'Typography',
       'MathML',
       'Word OMML',
       '公式排版',
@@ -238,7 +265,7 @@ export const INITIAL_TOOLS: ToolItem[] = [
     descriptionEn:
       'Compute voltage, current, electrical resistance, and dissipated power with automatic unit conversion (mA, kΩ, mW).',
     descriptionZh:
-      '物理电路核心定律：根据任意两项物理量计算电压、电流、电阻与电功率，支持科学单位换算。',
+      '物理电路核心定律：根据任意两项物理量计算电压、电流, 电阻与电功率，支持科学单位换算。',
     quickSolverId: 'ohms_law',
     iconName: 'Zap',
     tags: [
