@@ -33,6 +33,20 @@ export function resolveDynamicToolMetadata(
     };
   }
 
+  // 1.5 Linear System Solver (2x2)
+  if (sub.includes("linear-system") || sub.includes("system-solver") || sub.includes("linear_system")) {
+    return {
+      title: lang === "zh" ? "二元一次方程组求解器 (Linear System)" : "Linear System Solver (2x2)",
+      formula: "\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}",
+      category: "Algebra",
+      desc: lang === "zh"
+        ? "二元一次方程组带步骤求解，支持代入消元法与加减消元法、精确分数化简、2D函数图象交点可视化。"
+        : "Step-by-step 2x2 linear system solver with substitution & elimination methods, exact fractions, and 2D graph intersection.",
+      icon: "🧮",
+      quickSolverId: "quadratic",
+    };
+  }
+
   // 2. Linear Function & Line Equation Calculator
   if (sub.includes("linear") || sub.includes("line-equation") || sub.includes("slope-intercept")) {
     return {
