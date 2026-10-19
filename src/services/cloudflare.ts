@@ -130,7 +130,7 @@ export const SEED_DNS_RECORDS: CloudflareDnsRecord[] = [
     proxied: true,
     ttl: 1,
     created_on: '2026-10-19T05:20:00Z',
-    comment: 'Pythagorean Theorem Calculator Sub-site',
+    comment: 'Pythagorean Theorem Calculator Tool',
   },
   {
     id: 'cf-rec-002',
@@ -141,7 +141,7 @@ export const SEED_DNS_RECORDS: CloudflareDnsRecord[] = [
     proxied: true,
     ttl: 1,
     created_on: '2026-10-18T10:00:00Z',
-    comment: 'Quadratic Equation Solver Sub-site',
+    comment: 'Quadratic Equation Solver Tool',
   },
   {
     id: 'cf-rec-003',
@@ -152,7 +152,7 @@ export const SEED_DNS_RECORDS: CloudflareDnsRecord[] = [
     proxied: true,
     ttl: 1,
     created_on: '2026-10-19T06:00:00Z',
-    comment: 'MathBridge LaTeX Sub-site',
+    comment: 'MathBridge LaTeX Tool',
   },
 ];
 

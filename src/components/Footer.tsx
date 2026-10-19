@@ -28,24 +28,35 @@ export const Footer: React.FC<FooterProps> = ({ lang, onScrollToSection }) => {
             <p className="text-slate-500 max-w-md leading-relaxed">
               {lang === 'en'
                 ? 'FormulaCalcKit is a concise, precision scientific formula toolbox providing free instant calculators for mathematics, geometry, physics, and finance.'
-                : 'FormulaCalcKit（公式工具箱）致力于为全球师生与工程师提供简洁、免费、高精度的在线科学公式计算与矩阵工具导航服务。'}
+                : 'FormulaCalcKit（公式工具箱）致力于为全球师生与工程师提供简洁、免费、高精度的在线科学公式计算与专业工具服务。'}
             </p>
             <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-lg w-fit">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span className="font-medium text-[11px]">
                 {lang === 'en'
-                  ? 'Official Portal & Search Console Verified'
-                  : '官方主站 · Google Search Console 验证通过'}
+                  ? 'Official Platform & High Precision Engine'
+                  : '官方平台 · 高精度科学计算'}
               </span>
             </div>
           </div>
 
-          {/* Subdomains Index */}
+          {/* Tools Index */}
           <div className="space-y-2.5">
             <h4 className="font-bold text-slate-900">
-              {lang === 'en' ? 'Live Tool Sub-sites' : '独立工具子站'}
+              {lang === 'en' ? 'Featured Online Tools' : '热门在线工具'}
             </h4>
             <ul className="space-y-1.5">
+              <li>
+                <a
+                  href="https://mathbridge.formulacalckit.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 inline-flex items-center gap-1 transition-colors"
+                >
+                  <span>MathBridge (公式排版)</span>
+                  <ExternalLink className="w-3 h-3 text-slate-400" />
+                </a>
+              </li>
               <li>
                 <a
                   href="https://pythagorean-calculator.formulacalckit.com"
@@ -59,7 +70,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onScrollToSection }) => {
               </li>
               <li>
                 <a
-                  href="https://quadratic.formulacalckit.com"
+                  href="https://quadratic-solver.formulacalckit.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 inline-flex items-center gap-1 transition-colors"

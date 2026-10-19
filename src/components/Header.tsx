@@ -60,7 +60,14 @@ export const Header: React.FC<HeaderProps> = ({
             className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
           >
             <Globe className="w-3.5 h-3.5 text-blue-500" />
-            <span>{lang === 'en' ? 'Sub-sites Matrix' : '子站矩阵'}</span>
+            <span>{lang === 'en' ? 'Online Tools' : '在线工具'}</span>
+          </button>
+          <button
+            onClick={() => onScrollToSection('calculators')}
+            className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>{lang === 'en' ? 'Calculators Directory' : '计算工具库'}</span>
           </button>
           <button
             onClick={() => onScrollToSection('cheat-sheet')}
@@ -109,21 +116,21 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="md:hidden border-t border-slate-100 bg-white px-4 py-3 space-y-2 text-xs font-medium">
           <button
             onClick={() => {
+              onScrollToSection('subdomains-network');
+              setMobileMenuOpen(false);
+            }}
+            className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
+          >
+            {lang === 'en' ? 'Online Tools' : '在线工具'}
+          </button>
+          <button
+            onClick={() => {
               onScrollToSection('calculators');
               setMobileMenuOpen(false);
             }}
             className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
           >
             {lang === 'en' ? 'Calculators Directory' : '计算工具库'}
-          </button>
-          <button
-            onClick={() => {
-              onScrollToSection('subdomains-network');
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
-          >
-            {lang === 'en' ? 'Sub-sites Matrix' : '子站矩阵'}
           </button>
           <button
             onClick={() => {

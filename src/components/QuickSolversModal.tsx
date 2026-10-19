@@ -50,8 +50,8 @@ export const QuickSolversModal: React.FC<QuickSolversModalProps> = ({
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
               {lang === 'en'
-                ? 'Built-in interactive micro-solver on FormulaCalcKit hub'
-                : 'FormulaCalcKit 主站内置实时求解器'}
+                ? 'Interactive real-time formula calculator'
+                : 'FormulaCalcKit 实时在线求解器'}
             </p>
           </div>
           <button
@@ -82,7 +82,7 @@ export const QuickSolversModal: React.FC<QuickSolversModalProps> = ({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-blue-600 font-medium hover:text-blue-800 transition-colors"
             >
-              <span>{lang === 'en' ? 'Open Dedicated Full-Feature App' : '打开独立专属完整子站'}</span>
+              <span>{lang === 'en' ? 'Open Dedicated Interactive Tool' : '打开专属完整工具'}</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           ) : (

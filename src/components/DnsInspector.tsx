@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { QuickSolverId, WorkerSubsiteTool } from '../types';
 import {
   fetchWorkerDnsTools,
-  WORKER_DNS_API_URL,
   FALLBACK_WORKER_TOOLS,
 } from '../services/cloudflare';
 import {
   Globe,
   Zap,
   RefreshCw,
-  Sparkles,
   ArrowUpRight,
-  ShieldCheck,
+  Sparkles,
   CheckCircle2,
 } from 'lucide-react';
 
@@ -42,7 +40,6 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
   });
 
   const [loading, setLoading] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [lastSyncTime, setLastSyncTime] = useState<string>('');
 
   // Initial fetch on mount
@@ -54,14 +51,13 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
         const result = await fetchWorkerDnsTools();
         if (isMounted && result.tools && result.tools.length > 0) {
           setTools(result.tools);
-          setSyncStatus('success');
           setLastSyncTime(new Date().toLocaleTimeString());
           if (onSyncSubdomains) {
             onSyncSubdomains(result.tools.map((t) => t.domain));
           }
         }
-      } catch (err) {
-        if (isMounted) setSyncStatus('error');
+      } catch {
+        // ignore
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -76,19 +72,17 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
 
   const handleManualRefresh = async () => {
     setLoading(true);
-    setSyncStatus('idle');
     try {
       const result = await fetchWorkerDnsTools();
       if (result.tools && result.tools.length > 0) {
         setTools(result.tools);
-        setSyncStatus('success');
         setLastSyncTime(new Date().toLocaleTimeString());
         if (onSyncSubdomains) {
           onSyncSubdomains(result.tools.map((t) => t.domain));
         }
       }
     } catch {
-      setSyncStatus('error');
+      // ignore
     } finally {
       setLoading(false);
     }
@@ -114,28 +108,28 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
   return (
     <section id="subdomains-network" className="scroll-mt-20 space-y-4">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/70 border border-slate-200/80 rounded-2xl p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 sm:p-5">
         <div className="space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
               <Globe className="w-5 h-5 text-blue-600" />
               <span>
                 {lang === 'en'
-                  ? 'Active Tool Sub-sites Matrix'
-                  : '已上线独立工具子站矩阵'}
+                  ? 'Online Formula Tools'
+                  : '在线计算工具与应用'}
               </span>
             </h2>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 inline-flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>
-                {tools.length} {lang === 'en' ? 'Live Cloudflare Sites' : '个已部署在线'}
+                {tools.length} {lang === 'en' ? 'Active Tools' : '个可用工具'}
               </span>
             </span>
           </div>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
             {lang === 'en'
-              ? 'Automatically synchronized in real-time from Cloudflare DNS records. Any sub-site added or removed in DNS is dynamically reflected here.'
-              : '通过 Cloudflare 边缘节点自动同步 DNS 解析记录。主域名下新上站自动增加，下架即刻同步减少。'}
+              ? 'Featured interactive mathematics and scientific calculation tools. Direct access with step-by-step solving.'
+              : '精选互动式科学与数学公式计算工具，支持即时计算与详细步骤推导，点击即可直接使用。'}
           </p>
         </div>
 
@@ -145,7 +139,7 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
             onClick={handleManualRefresh}
             disabled={loading}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-blue-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-all cursor-pointer disabled:opacity-60"
-            title={lang === 'en' ? 'Re-scan Cloudflare Worker API' : '重新从 Cloudflare Worker 同步'}
+            title={lang === 'en' ? 'Refresh Tool Catalog' : '刷新工具列表'}
           >
             <RefreshCw
               className={`w-3.5 h-3.5 text-blue-600 ${loading ? 'animate-spin' : ''}`}
@@ -153,17 +147,17 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
             <span>
               {loading
                 ? lang === 'en'
-                  ? 'Syncing...'
-                  : '正在同步...'
+                  ? 'Updating...'
+                  : '正在更新...'
                 : lang === 'en'
-                ? 'Sync DNS'
-                : '实时同步'}
+                ? 'Refresh'
+                : '刷新列表'}
             </span>
           </button>
         </div>
       </div>
 
-      {/* Sub-site Cards Grid */}
+      {/* Tool Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {tools.map((site) => {
           const quickSolverId = getQuickSolverId(site.subdomain);
@@ -191,7 +185,7 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md shrink-0">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>{lang === 'en' ? 'Active' : '在线'}</span>
+                    <span>{lang === 'en' ? 'Live' : '可用'}</span>
                   </div>
                 </div>
 
@@ -219,12 +213,12 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
                     className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors cursor-pointer"
                   >
                     <Zap className="w-3.5 h-3.5 text-amber-500" />
-                    <span>{lang === 'en' ? 'Quick Solve' : '主站即时算'}</span>
+                    <span>{lang === 'en' ? 'Quick Solve' : '即时求解'}</span>
                   </button>
                 ) : (
                   <span className="text-xs text-slate-400 flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-slate-400" />
-                    <span>{lang === 'en' ? 'Independent App' : '独立工具站'}</span>
+                    <span>{lang === 'en' ? 'Interactive Tool' : '在线工具'}</span>
                   </span>
                 )}
 
@@ -234,7 +228,7 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors"
                 >
-                  <span>{lang === 'en' ? 'Open Sub-site' : '进入独立站'}</span>
+                  <span>{lang === 'en' ? 'Open Tool' : '打开工具'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -243,25 +237,15 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
         })}
       </div>
 
-      {/* Security & Cloudflare Worker Gateway Attribution */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 px-1 pt-1">
-        <div className="flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+      {/* Clean Status Footer */}
+      {lastSyncTime && (
+        <div className="flex items-center justify-end gap-1 text-[11px] text-slate-400 px-1 pt-1">
+          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
           <span>
-            {lang === 'en'
-              ? 'DNS Automated Discovery Gateway: Cloudflare Worker Edge Service'
-              : 'DNS 自动化探测通道：Cloudflare Worker 边缘节点（服务端零密钥泄露架构）'}
+            {lang === 'en' ? 'Updated:' : '更新时间:'} {lastSyncTime}
           </span>
         </div>
-        {lastSyncTime && (
-          <div className="flex items-center gap-1 text-slate-400">
-            <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-            <span>
-              {lang === 'en' ? 'Latest sync:' : '最近更新:'} {lastSyncTime}
-            </span>
-          </div>
-        )}
-      </div>
+      )}
     </section>
   );
 };

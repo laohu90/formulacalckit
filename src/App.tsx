@@ -79,14 +79,9 @@ export function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-16 w-full">
         {/* Hero Section */}
-        <Hero
-          lang={lang}
-          onExploreClick={() => scrollToSection('calculators')}
-          onSubsitesClick={() => scrollToSection('subdomains-network')}
-          onQuickSolve={(id) => handleOpenQuickSolver(id)}
-        />
+        <Hero lang={lang} />
 
-        {/* Live Subdomains & Dedicated Tools Matrix (Auto-Discovered & Verified) */}
+        {/* Featured Online Tools (Synchronized from Cloudflare Worker) */}
         <DnsInspector
           lang={lang}
           onSyncSubdomains={handleSyncSubdomains}

@@ -155,12 +155,12 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
                   {isDiscovered ? (
                     <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{lang === 'en' ? 'Live Subdomain' : '已上线独立子站'}</span>
+                      <span>{lang === 'en' ? 'Live Tool' : '在线工具'}</span>
                     </div>
                   ) : tool.quickSolverId ? (
                     <div className="flex items-center gap-1.5 text-[11px] font-medium text-blue-700 bg-blue-50 border border-blue-200/60 px-2 py-0.5 rounded-md">
                       <Zap className="w-3.5 h-3.5 text-blue-600" />
-                      <span>{lang === 'en' ? 'Instant Solver' : '内置即时求解'}</span>
+                      <span>{lang === 'en' ? 'Instant Solver' : '即时求解'}</span>
                     </div>
                   ) : null}
                 </div>
@@ -200,7 +200,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
                   >
                     <Zap className="w-3.5 h-3.5 text-amber-300" />
-                    <span>{lang === 'en' ? 'Quick Solve' : '主站快速求解'}</span>
+                    <span>{lang === 'en' ? 'Quick Solve' : '即时求解'}</span>
                   </button>
                 ) : (
                   <span className="text-xs text-slate-400">
@@ -215,7 +215,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
                   >
-                    <span>{lang === 'en' ? 'Open App' : '打开完整子站'}</span>
+                    <span>{lang === 'en' ? 'Open Tool' : '打开工具'}</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 )}
