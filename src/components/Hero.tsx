@@ -6,17 +6,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ lang }) => {
   return (
-    <section className="pt-8 pb-4 text-center max-w-3xl mx-auto space-y-4">
-      {/* Micro-badge */}
-      <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200/80 rounded-full text-xs font-semibold text-blue-700">
-        <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-        <span>
-          {lang === 'en'
-            ? 'FormulaCalcKit · Scientific Formula & Calculation Suite'
-            : 'FormulaCalcKit · 精准科学公式工具箱'}
-        </span>
-      </div>
-
+    <section className="pt-4 pb-2 text-center max-w-3xl mx-auto space-y-3">
       {/* Main Title */}
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
         {lang === 'en' ? (
