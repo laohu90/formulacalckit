@@ -3,38 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pythagorean Theorem Calculator - Right Triangle Solver with Simplified Radicals (a² + b² = c²)</title>
-    <meta name="description" content="Free online Pythagorean theorem calculator. Solve for hypotenuse or legs with automatic radical simplification (e.g. 2√5), step-by-step mathematical proof, triangle geometry metrics, and Pythagorean triples table." />
-    <meta name="keywords" content="Pythagorean theorem calculator, hypotenuse calculator, right triangle solver, simplify radicals, pythagorean triples, a2+b2=c2, find missing side of triangle, exact radical form, 勾股定理计算器, 直角三角形斜边计算器, 勾股数在线查询" />
-    <meta name="author" content="Pythagoras Math Lab" />
+    <title>FormulaCalcKit - Free Online Math & Science Formula Calculators (公式工具箱)</title>
+    <meta
+      name="description"
+      content="FormulaCalcKit (公式工具箱) is an all-in-one directory and instant solver for mathematical, geometric, algebraic, physics, and scientific formulas. Includes Cloudflare DNS auto-discovery for live calculation subdomains."
+    />
+    <meta
+      name="keywords"
+      content="FormulaCalcKit, formula calculators, math tools, online calculator toolbox, Pythagorean calculator, quadratic equation solver, geometry calculator, trigonometry solver, Cloudflare DNS site explorer, 公式工具箱, 数学公式计算器, 在线公式求解"
+    />
+    <meta name="author" content="FormulaCalcKit Lab" />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://formulacalckit.com/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#2563eb" />
-
     <meta name="google-site-verification" content="google1f8c4d99a3c33d8f" />
-    <meta property="og:url" content="https://pythagorean-calculator.formulacalckit.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:url" content="https://formulacalckit.com/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Pythagorean Theorem Calculator - Exact Radical & Hypotenuse Solver" />
-    <meta property="og:description" content="Solve for hypotenuse or legs with automated square root reduction, exact radicals, dynamic SVG diagram, and step-by-step solution." />
-    <meta property="og:site_name" content="Pythagorean Theorem Calculator" />
+    <meta property="og:title" content="FormulaCalcKit - All-in-One Online Formula Calculators" />
+    <meta
+      property="og:description"
+      content="Free online scientific formula calculators, quick math solvers, formula cheat-sheets, and Cloudflare DNS subdomain explorer."
+    />
+    <meta property="og:site_name" content="FormulaCalcKit" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Pythagorean Theorem Calculator - Right Triangle Solver" />
-    <meta name="twitter:description" content="Automated radical simplification, step-by-step derivations, and Pythagorean triples lookup." />
+    <meta name="twitter:title" content="FormulaCalcKit - Math & Science Formula Toolbox" />
+    <meta
+      name="twitter:description"
+      content="Instant calculation, step-by-step solutions, and live DNS directory for mathematical tools."
+    />
 
-    <!-- Schema.org WebApplication & FAQPage JSON-LD -->
+    <!-- Schema.org WebApplication & CollectionPage JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "WebApplication",
-          "name": "Pythagorean Theorem Calculator / 勾股定理计算器",
+          "name": "FormulaCalcKit / 公式工具箱",
+          "url": "https://formulacalckit.com/",
           "applicationCategory": "EducationalApplication",
           "operatingSystem": "All",
           "inLanguage": ["en", "zh-CN"],
-          "description": "Online right triangle hypotenuse and leg solver with automated radical simplification, exact fractional form, dynamic SVG visualizer, and step-by-step mathematical solutions.",
+          "description": "All-in-one free online mathematical, geometric, and scientific formula calculator directory with instant interactive solvers and Cloudflare DNS tool auto-discovery.",
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -42,39 +57,16 @@
           }
         },
         {
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "What is the formula for the Pythagorean Theorem?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "In any right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides: a² + b² = c². To solve for hypotenuse: c = √(a² + b²). To solve for a leg: a = √(c² - b²) or b = √(c² - a²)."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How does this calculator simplify radicals automatically?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "The calculator performs prime factorization on the radicand to extract all perfect square factors. For instance, √20 = √(4 × 5) = 2√5, and √18 = √(9 × 2) = 3√2, giving you the exact simplest radical form."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What are common Pythagorean triples?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Common primitive Pythagorean triples include (3, 4, 5), (5, 12, 13), (7, 24, 25), (8, 15, 17), (9, 40, 41), and (20, 21, 29). Multiplying by any positive integer creates derived triples such as (6, 8, 10)."
-              }
-            }
-          ]
+          "@type": "CollectionPage",
+          "name": "FormulaCalcKit Directory & Math Formula Cheat Sheet",
+          "url": "https://formulacalckit.com/",
+          "description": "Curated index of mathematical formula calculators, right triangle solvers, quadratic solvers, physics laws, and Cloudflare-hosted calculation subdomains."
         }
       ]
     }
     </script>
   </head>
-  <body class="bg-white text-slate-800 antialiased selection:bg-blue-600 selection:text-white">
+  <body class="bg-white text-slate-800 antialiased selection:bg-blue-600 selection:text-white min-h-screen">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

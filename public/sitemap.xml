@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://pythagorean-calculator.formulacalckit.com/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://pythagorean-calculator.formulacalckit.com/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://pythagorean-calculator.formulacalckit.com/?lang=zh"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://pythagorean-calculator.formulacalckit.com/"/>
+    <loc>https://formulacalckit.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://formulacalckit.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://formulacalckit.com/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://formulacalckit.com/"/>
     <lastmod>2026-10-19</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pythagorean-calculator.formulacalckit.com/?lang=en</loc>
+    <loc>https://formulacalckit.com/?lang=en</loc>
     <lastmod>2026-10-19</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pythagorean-calculator.formulacalckit.com/?lang=zh</loc>
+    <loc>https://formulacalckit.com/?lang=zh</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://formulacalckit.com/#dns-inspector</loc>
     <lastmod>2026-10-19</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://formulacalckit.com/#cheat-sheet</loc>
+    <lastmod>2026-10-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

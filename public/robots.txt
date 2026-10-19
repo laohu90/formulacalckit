@@ -1,8 +1,5 @@
-# Robots.txt for Pythagorean Theorem Calculator
-# https://pythagorean-calculator.formulacalckit.com/
-
 User-agent: *
 Allow: /
+Disallow: /api/
 
-# Sitemap
-Sitemap: https://pythagorean-calculator.formulacalckit.com/sitemap.xml
+Sitemap: https://formulacalckit.com/sitemap.xml

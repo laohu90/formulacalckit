@@ -1,0 +1,140 @@
+import { ToolItem } from '../types';
+
+export const INITIAL_TOOLS: ToolItem[] = [
+  {
+    id: 'pythagorean-calculator',
+    nameEn: 'Pythagorean Theorem Calculator',
+    nameZh: '勾股定理计算器',
+    category: 'geometry',
+    formula: 'a² + b² = c²',
+    descriptionEn:
+      'Calculate missing hypotenuse or legs with exact radical simplification, step-by-step mathematical proofs, and triples table.',
+    descriptionZh:
+      '求直角三角形任意边长，支持最简二次根号化简（如 2√5）、逐步几何推导与勾股数查询。',
+    subdomainUrl: 'https://pythagorean-calculator.formulacalckit.com',
+    quickSolverId: 'pythagorean',
+    iconName: 'Triangle',
+    tags: ['Right Triangle', 'Hypotenuse', 'Radicals', 'Triples'],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'pythagorean-calculator.formulacalckit.com',
+  },
+  {
+    id: 'quadratic-solver',
+    nameEn: 'Quadratic Equation Solver',
+    nameZh: '一元二次方程求解器',
+    category: 'algebra',
+    formula: 'ax² + bx + c = 0',
+    descriptionEn:
+      'Find real and complex roots, discriminant Δ, vertex coordinates, and step-by-step factoring or quadratic formula solutions.',
+    descriptionZh:
+      '快速解一元二次方程，输出实根与复数根、判别式 Δ、顶点坐标及十字相乘/配方过程。',
+    subdomainUrl: 'https://quadratic.formulacalckit.com',
+    quickSolverId: 'quadratic',
+    iconName: 'FunctionSquare',
+    tags: ['Roots', 'Discriminant', 'Parabola', 'Factoring'],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'quadratic.formulacalckit.com',
+  },
+  {
+    id: 'circle-sphere-calc',
+    nameEn: 'Circle & Sphere Calculator',
+    nameZh: '圆与球体几何计算器',
+    category: 'geometry',
+    formula: 'A = πr², V = ⁴⁄₃πr³',
+    descriptionEn:
+      'Solve circle area, circumference, diameter, and 3D sphere surface area and volume from any single metric.',
+    descriptionZh:
+      '输入半径、直径或面积任意一个值，立即精确求解圆周长、圆面积、球表面积与球体体积。',
+    quickSolverId: 'circle',
+    iconName: 'Circle',
+    tags: ['Radius', 'Circumference', 'Sphere', 'Pi'],
+    isVerifiedSubdomain: false,
+  },
+  {
+    id: 'trigonometry-solver',
+    nameEn: 'Trigonometric Functions & Ratios',
+    nameZh: '三角函数与直角边比值计算器',
+    category: 'trigonometry',
+    formula: 'sin θ = opp/hyp, tan θ = sin/cos',
+    descriptionEn:
+      'Compute sine, cosine, tangent, cotangent, secant, cosecant, and inverse trig functions in both degrees and radians.',
+    descriptionZh:
+      '计算正弦、余弦、正切、余切及反三角函数值，支持角度（Degree）与弧度（Radian）双向切换。',
+    quickSolverId: 'trigonometry',
+    iconName: 'Compass',
+    tags: ['Sine', 'Cosine', 'Tangent', 'Radians'],
+    isVerifiedSubdomain: false,
+  },
+  {
+    id: 'ohms-law-power',
+    nameEn: "Ohm's Law & Electric Power",
+    nameZh: '欧姆定律与电功率计算器',
+    category: 'physics',
+    formula: 'V = I · R, P = V · I',
+    descriptionEn:
+      'Compute voltage, current, electrical resistance, and dissipated power with automatic unit conversion (mA, kΩ, mW).',
+    descriptionZh:
+      '物理电路核心定律：根据任意两项物理量计算电压、电流、电阻与电功率，支持科学单位换算。',
+    quickSolverId: 'ohms_law',
+    iconName: 'Zap',
+    tags: ['Voltage', 'Current', 'Resistance', 'Watts'],
+    isVerifiedSubdomain: false,
+  },
+  {
+    id: 'percentage-calculator',
+    nameEn: 'Percentage & Growth Calculator',
+    nameZh: '百分比与变化率计算器',
+    category: 'finance',
+    formula: 'Δ% = ((V₂ - V₁) / V₁) × 100%',
+    descriptionEn:
+      'Calculate percentage increase/decrease, margin, discount, and proportional ratios for business and academic use.',
+    descriptionZh:
+      '精准计算增长率、折扣后价格、利润率与基数占比，适用于日常财务与学术运算。',
+    quickSolverId: 'percentage',
+    iconName: 'Percent',
+    tags: ['Discount', 'Growth Rate', 'Margin', 'Ratio'],
+    isVerifiedSubdomain: false,
+  },
+  {
+    id: 'herons-formula',
+    nameEn: "Heron's Triangle Area Calculator",
+    nameZh: '海伦公式任意三角形面积',
+    category: 'geometry',
+    formula: 'A = √(s(s-a)(s-b)(s-c))',
+    descriptionEn:
+      'Calculate the exact area of any triangle knowing only the lengths of its three sides, with triangle inequality validation.',
+    descriptionZh:
+      '只需已知三角形三条边长，无需测量高，自动校验两边之和大于第三边并输出精确面积。',
+    iconName: 'Maximize2',
+    tags: ['Triangle Area', 'Semiperimeter', 'Non-Right Triangle'],
+    isVerifiedSubdomain: false,
+  },
+  {
+    id: 'compound-interest',
+    nameEn: 'Compound Interest Calculator',
+    nameZh: '复利收益与终值计算器',
+    category: 'finance',
+    formula: 'A = P(1 + r/n)ⁿᵗ',
+    descriptionEn:
+      'Forecast long-term investment growth, compounding frequencies (daily, monthly, annually), and interest accumulated over time.',
+    descriptionZh:
+      '计算本金按固定利率经过周期复利后的终值与累计净利息，直观展示复利增长曲线。',
+    iconName: 'TrendingUp',
+    tags: ['Investment', 'Annual Rate', 'Principal', 'Compound Growth'],
+    isVerifiedSubdomain: false,
+  },
+  {
+    id: 'kinematics-motion',
+    nameEn: 'Uniform Acceleration Kinematics',
+    nameZh: '匀变速直线运动物理方程',
+    category: 'physics',
+    formula: 'v = v₀ + at, s = v₀t + ½at²',
+    descriptionEn:
+      'Solve initial velocity, final velocity, acceleration, displacement, and time with standard SI unit checks.',
+    descriptionZh:
+      '经典力学公式：计算初速度、末速度、加速度、位移与耗时，自带标准国际单位解析。',
+    iconName: 'Activity',
+    tags: ['Velocity', 'Acceleration', 'Displacement', 'Newtonian Physics'],
+    isVerifiedSubdomain: false,
+  },
+];
