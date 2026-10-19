@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { Eye, HelpCircle } from 'lucide-react';
 import { SolveResult, roundDisplay } from '../utils/pythagorean';
+import { Language, translations } from '../i18n/translations';
 
 interface Props {
   data: SolveResult;
+  lang: Language;
 }
 
-export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
+export const TriangleVisualizer: React.FC<Props> = ({ data, lang }) => {
   const [showAltitude, setShowAltitude] = useState(true);
   const [showAngles, setShowAngles] = useState(true);
 
+  const t = translations[lang].visualizer;
   const { a, b, c, target, unit, angleAlphaDeg, angleBetaDeg, heightC } = data;
 
   // Viewbox dimension
@@ -17,10 +19,6 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
   const svgHeight = 270;
   const padding = 45;
 
-  // Render triangle with right angle at bottom-left:
-  // C is at (cx, cy)
-  // A is at (cx, cy - h_a)
-  // B is at (cx + w_b, cy)
   const maxW = svgWidth - padding * 2;
   const maxH = svgHeight - padding * 2;
 
@@ -39,16 +37,14 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
   const by = cy;
 
   // Altitude foot from C to hypotenuse AB
-  // Vector AB = (bx - ax, by - ay)
-  // Projection of AC on AB
   const abX = bx - ax;
   const abY = by - ay;
   const abLen2 = abX * abX + abY * abY;
   const acX = cx - ax;
   const acY = cy - ay;
-  const t = (acX * abX + acY * abY) / abLen2;
-  const footX = ax + t * abX;
-  const footY = ay + t * abY;
+  const tProj = (acX * abX + acY * abY) / abLen2;
+  const footX = ax + tProj * abX;
+  const footY = ay + tProj * abY;
 
   // Right-angle marker at C
   const markerSize = Math.min(18, Math.min(renderA, renderB) * 0.25);
@@ -59,7 +55,7 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
           <h3 className="font-bold text-slate-800 text-sm tracking-wide">
-            动态几何图示 (Geometric Visualization)
+            {t.title}
           </h3>
         </div>
         <div className="flex items-center gap-3 text-xs text-slate-500">
@@ -70,7 +66,7 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
               onChange={(e) => setShowAltitude(e.target.checked)}
               className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             />
-            <span>显示高线 (h)</span>
+            <span>{t.showAltitude}</span>
           </label>
           <label className="flex items-center gap-1.5 cursor-pointer hover:text-slate-800 transition-colors select-none">
             <input
@@ -79,7 +75,7 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
               onChange={(e) => setShowAngles(e.target.checked)}
               className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             />
-            <span>显示角度</span>
+            <span>{t.showAngles}</span>
           </label>
         </div>
       </div>
@@ -165,14 +161,16 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
           {/* Vertex Labels */}
           <text x={ax - 16} y={ay - 6} className="text-xs font-bold fill-slate-700">A</text>
           <text x={bx + 8} y={by + 6} className="text-xs font-bold fill-slate-700">B</text>
-          <text x={cx - 16} y={cy + 14} className="text-xs font-bold fill-slate-700">C (90°)</text>
+          <text x={cx - 16} y={cy + 14} className="text-xs font-bold fill-slate-700">
+            {t.rightAngleLabel}
+          </text>
 
           {/* Dimension Label on Leg a (Vertical Left) */}
           <g>
             <rect
-              x={ax - 42}
+              x={ax - 44}
               y={(ay + cy) / 2 - 12}
-              width={target === 'a' ? 52 : 44}
+              width={target === 'a' ? 54 : 46}
               height="22"
               rx="6"
               fill={target === 'a' ? '#eff6ff' : '#ffffff'}
@@ -180,7 +178,7 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
               strokeWidth={target === 'a' ? '1.5' : '1'}
             />
             <text
-              x={ax - (target === 'a' ? 16 : 20)}
+              x={ax - (target === 'a' ? 17 : 21)}
               y={(ay + cy) / 2 + 3}
               textAnchor="middle"
               className={`text-[11px] font-bold ${target === 'a' ? 'fill-blue-700' : 'fill-slate-800'}`}
@@ -192,9 +190,9 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
           {/* Dimension Label on Leg b (Horizontal Bottom) */}
           <g>
             <rect
-              x={(cx + bx) / 2 - (target === 'b' ? 26 : 22)}
+              x={(cx + bx) / 2 - (target === 'b' ? 27 : 23)}
               y={cy + 12}
-              width={target === 'b' ? 52 : 44}
+              width={target === 'b' ? 54 : 46}
               height="22"
               rx="6"
               fill={target === 'b' ? '#eff6ff' : '#ffffff'}
@@ -214,9 +212,9 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
           {/* Dimension Label on Hypotenuse c (Slanted) */}
           <g>
             <rect
-              x={(ax + bx) / 2 + 8}
+              x={(ax + bx) / 2 + 6}
               y={(ay + by) / 2 - 16}
-              width={target === 'c' ? 58 : 48}
+              width={target === 'c' ? 60 : 50}
               height="22"
               rx="6"
               fill={target === 'c' ? '#eff6ff' : '#ffffff'}
@@ -224,7 +222,7 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
               strokeWidth={target === 'c' ? '1.5' : '1'}
             />
             <text
-              x={(ax + bx) / 2 + (target === 'c' ? 37 : 32)}
+              x={(ax + bx) / 2 + (target === 'c' ? 36 : 31)}
               y={(ay + by) / 2 - 1}
               textAnchor="middle"
               className={`text-[11px] font-bold ${target === 'c' ? 'fill-blue-700' : 'fill-slate-800'}`}
@@ -238,15 +236,15 @@ export const TriangleVisualizer: React.FC<Props> = ({ data }) => {
       {/* Quick Summary Pill Bar */}
       <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-100 text-center">
         <div className="bg-slate-50 py-1.5 px-2 rounded-lg">
-          <span className="text-[10px] text-slate-400 block font-medium">直角边 a</span>
+          <span className="text-[10px] text-slate-400 block font-medium">{t.legA}</span>
           <span className="text-xs font-bold text-slate-700">{roundDisplay(a, 2)}{unit}</span>
         </div>
         <div className="bg-slate-50 py-1.5 px-2 rounded-lg">
-          <span className="text-[10px] text-slate-400 block font-medium">直角边 b</span>
+          <span className="text-[10px] text-slate-400 block font-medium">{t.legB}</span>
           <span className="text-xs font-bold text-slate-700">{roundDisplay(b, 2)}{unit}</span>
         </div>
         <div className="bg-blue-50 py-1.5 px-2 rounded-lg border border-blue-100">
-          <span className="text-[10px] text-blue-600 block font-medium">斜边 c (最长边)</span>
+          <span className="text-[10px] text-blue-600 block font-medium">{t.hypotenuseC}</span>
           <span className="text-xs font-bold text-blue-700">{roundDisplay(c, 2)}{unit}</span>
         </div>
       </div>

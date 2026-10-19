@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Search, CheckCircle2, XCircle, Sparkles, Wand2, Filter, ArrowUpRight } from 'lucide-react';
 import { COMMON_TRIPLES, validateTriple, generateEuclidTriple, PythagoreanTriple } from '../utils/pythagorean';
+import { Language, translations } from '../i18n/translations';
 
 interface Props {
+  lang: Language;
   onSelectTriple?: (a: number, b: number) => void;
 }
 
-export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
+export const TriplesExplorer: React.FC<Props> = ({ lang, onSelectTriple }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'primitive' | 'under50'>('all');
+
+  const t = translations[lang].triples;
 
   // Validator inputs
   const [valA, setValA] = useState('3');
@@ -30,7 +34,6 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
 
   // Filter triples table
   const filteredTriples = COMMON_TRIPLES.filter((item) => {
-    // Search filter
     if (searchTerm.trim()) {
       const q = searchTerm.trim();
       const match =
@@ -50,14 +53,14 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
     const na = parseInt(valA, 10);
     const nb = parseInt(valB, 10);
     const nc = parseInt(valC, 10);
-    setValidationResult(validateTriple(na, nb, nc));
+    setValidationResult(validateTriple(na, nb, nc, lang));
   };
 
   // Handle Euclid generator
   const handleGenerate = () => {
     const m = parseInt(genM, 10);
     const n = parseInt(genN, 10);
-    const res = generateEuclidTriple(m, n);
+    const res = generateEuclidTriple(m, n, lang);
     if (res.triple) {
       setGeneratedTriple(res.triple);
     }
@@ -69,14 +72,13 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-3">
           <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-          数学宝库 · 勾股数在线查询
+          {t.badge}
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-          勾股数速查表与在线验证生成器
+          {t.title}
         </h2>
         <p className="text-sm text-slate-500 mt-2 max-w-3xl leading-relaxed">
-          勾股数（毕达哥拉斯三元数）是指能满足 <code className="text-indigo-600 font-mono bg-indigo-50 px-1 py-0.5 rounded">a² + b² = c²</code> 的三个正整数组合。
-          本模块支持常用经典勾股数检索、任意三数组合检验，以及基于欧几里得参数公式的无限生成。
+          {t.desc}
         </p>
       </div>
 
@@ -86,40 +88,40 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/90">
           <h3 className="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            勾股数在线验证器 (Validator)
+            {t.validatorTitle}
           </h3>
           <p className="text-xs text-slate-500 mb-4">
-            输入任意三个正整数，系统将立即检测它们能否构成直角三角形。
+            {t.validatorDesc}
           </p>
 
           <div className="grid grid-cols-3 gap-3 mb-4">
             <div>
-              <label className="text-[11px] font-semibold text-slate-600 block mb-1">边长 1</label>
+              <label className="text-[11px] font-semibold text-slate-600 block mb-1">{t.side1}</label>
               <input
                 type="number"
                 value={valA}
                 onChange={(e) => setValA(e.target.value)}
-                placeholder="例如 3"
+                placeholder="3"
                 className="w-full bg-white px-3 py-2 text-sm font-mono font-bold text-slate-800 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="text-[11px] font-semibold text-slate-600 block mb-1">边长 2</label>
+              <label className="text-[11px] font-semibold text-slate-600 block mb-1">{t.side2}</label>
               <input
                 type="number"
                 value={valB}
                 onChange={(e) => setValB(e.target.value)}
-                placeholder="例如 4"
+                placeholder="4"
                 className="w-full bg-white px-3 py-2 text-sm font-mono font-bold text-slate-800 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="text-[11px] font-semibold text-slate-600 block mb-1">边长 3 (最长边)</label>
+              <label className="text-[11px] font-semibold text-slate-600 block mb-1">{t.side3}</label>
               <input
                 type="number"
                 value={valC}
                 onChange={(e) => setValC(e.target.value)}
-                placeholder="例如 5"
+                placeholder="5"
                 className="w-full bg-white px-3 py-2 text-sm font-mono font-bold text-slate-800 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -129,7 +131,7 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
             onClick={handleValidate}
             className="w-full py-2 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-colors cursor-pointer shadow-2xs"
           >
-            立即验证三元数
+            {t.validateBtn}
           </button>
 
           {validationResult && (
@@ -144,12 +146,12 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
                 {validationResult.isValid ? (
                   <>
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>验证通过！是有效勾股数</span>
+                    <span>{t.validHeader}</span>
                   </>
                 ) : (
                   <>
                     <XCircle className="w-4 h-4 text-rose-600" />
-                    <span>验证不通过：非勾股数</span>
+                    <span>{t.invalidHeader}</span>
                   </>
                 )}
               </div>
@@ -162,32 +164,32 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/90">
           <h3 className="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
             <Wand2 className="w-4 h-4 text-indigo-600" />
-            欧几里得公式生成器 (Euclid's Formula)
+            {t.generatorTitle}
           </h3>
           <p className="text-xs text-slate-500 mb-4">
-            设定正整数 <code className="font-mono text-indigo-600">m &gt; n &gt; 0</code>，依据 <code className="font-mono text-indigo-600">a = m²-n², b = 2mn, c = m²+n²</code> 生成勾股数。
+            {t.generatorDesc}
           </p>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-[11px] font-semibold text-slate-600 block mb-1">参数 m (较大数)</label>
+              <label className="text-[11px] font-semibold text-slate-600 block mb-1">{t.paramM}</label>
               <input
                 type="number"
                 min="2"
                 value={genM}
                 onChange={(e) => setGenM(e.target.value)}
-                placeholder="例如 3"
+                placeholder="3"
                 className="w-full bg-white px-3 py-2 text-sm font-mono font-bold text-slate-800 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <div>
-              <label className="text-[11px] font-semibold text-slate-600 block mb-1">参数 n (较小数)</label>
+              <label className="text-[11px] font-semibold text-slate-600 block mb-1">{t.paramN}</label>
               <input
                 type="number"
                 min="1"
                 value={genN}
                 onChange={(e) => setGenN(e.target.value)}
-                placeholder="例如 2"
+                placeholder="2"
                 className="w-full bg-white px-3 py-2 text-sm font-mono font-bold text-slate-800 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -197,20 +199,20 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
             onClick={handleGenerate}
             className="w-full py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs transition-colors cursor-pointer shadow-2xs"
           >
-            根据公式生成新勾股数
+            {t.generateBtn}
           </button>
 
           {generatedTriple && (
             <div className="mt-4 p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 text-xs">
               <span className="font-bold text-indigo-800 block mb-1">
-                生成得到三元数: ({generatedTriple.a}, {generatedTriple.b}, {generatedTriple.c})
+                {t.generatedTitle(generatedTriple.a, generatedTriple.b, generatedTriple.c)}
               </span>
               <div className="font-mono text-[11px] text-indigo-700 space-y-0.5">
                 <div>a = {genM}² - {genN}² = {generatedTriple.a}</div>
                 <div>b = 2 × {genM} × {genN} = {generatedTriple.b}</div>
                 <div>c = {genM}² + {genN}² = {generatedTriple.c}</div>
                 <div className="pt-1 font-sans text-indigo-600">
-                  {generatedTriple.isPrimitive ? '★ 该组属于本原勾股数（三数互质）' : '该组可被因数约简'}
+                  {generatedTriple.isPrimitive ? t.isPrimitiveText : t.isDerivedText}
                 </div>
               </div>
             </div>
@@ -223,7 +225,7 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <h3 className="font-bold text-slate-800 text-base flex items-center gap-2">
             <Filter className="w-4 h-4 text-slate-600" />
-            常用经典勾股数检索表 ({filteredTriples.length} 组)
+            {t.tableTitle(filteredTriples.length)}
           </h3>
 
           <div className="flex flex-wrap items-center gap-2.5">
@@ -234,8 +236,8 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="搜索边长，如 13、25..."
-                className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-44"
+                placeholder={t.searchPlaceholder}
+                className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
               />
             </div>
 
@@ -247,7 +249,7 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
                   filterType === 'all' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-600'
                 }`}
               >
-                全部
+                {t.filterAll}
               </button>
               <button
                 onClick={() => setFilterType('primitive')}
@@ -255,7 +257,7 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
                   filterType === 'primitive' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-600'
                 }`}
               >
-                仅本原组
+                {t.filterPrimitive}
               </button>
               <button
                 onClick={() => setFilterType('under50')}
@@ -263,7 +265,7 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
                   filterType === 'under50' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-600'
                 }`}
               >
-                斜边 ≤ 50
+                {t.filterUnder50}
               </button>
             </div>
           </div>
@@ -274,43 +276,43 @@ export const TriplesExplorer: React.FC<Props> = ({ onSelectTriple }) => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
-                <th className="py-3 px-4">序号</th>
-                <th className="py-3 px-4">直角边 a</th>
-                <th className="py-3 px-4">直角边 b</th>
-                <th className="py-3 px-4 text-blue-700">斜边 c (最长)</th>
-                <th className="py-3 px-4">平方和验证式</th>
-                <th className="py-3 px-4">性质类型</th>
-                <th className="py-3 px-4 text-right">快捷操作</th>
+                <th className="py-3 px-4">{t.colIndex}</th>
+                <th className="py-3 px-4">{t.colA}</th>
+                <th className="py-3 px-4">{t.colB}</th>
+                <th className="py-3 px-4 text-blue-700">{t.colC}</th>
+                <th className="py-3 px-4">{t.colFormula}</th>
+                <th className="py-3 px-4">{t.colType}</th>
+                <th className="py-3 px-4 text-right">{t.colAction}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
-              {filteredTriples.map((t, idx) => (
+              {filteredTriples.map((item, idx) => (
                 <tr key={idx} className="hover:bg-blue-50/40 transition-colors group">
                   <td className="py-3 px-4 font-mono text-slate-400 font-medium">#{idx + 1}</td>
-                  <td className="py-3 px-4 font-mono font-bold text-slate-800">{t.a}</td>
-                  <td className="py-3 px-4 font-mono font-bold text-slate-800">{t.b}</td>
-                  <td className="py-3 px-4 font-mono font-extrabold text-blue-700">{t.c}</td>
+                  <td className="py-3 px-4 font-mono font-bold text-slate-800">{item.a}</td>
+                  <td className="py-3 px-4 font-mono font-bold text-slate-800">{item.b}</td>
+                  <td className="py-3 px-4 font-mono font-extrabold text-blue-700">{item.c}</td>
                   <td className="py-3 px-4 font-mono text-slate-500">
-                    {t.a}² + {t.b}² = {t.a * t.a} + {t.b * t.b} = {t.c * t.c}
+                    {item.a}² + {item.b}² = {item.a * item.a} + {item.b * item.b} = {item.c * item.c}
                   </td>
                   <td className="py-3 px-4">
-                    {t.isPrimitive ? (
+                    {item.isPrimitive ? (
                       <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold text-[10px]">
-                        本原勾股数
+                        {t.typePrimitive}
                       </span>
                     ) : (
                       <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium text-[10px]">
-                        倍数派生组
+                        {t.typeDerived}
                       </span>
                     )}
                   </td>
                   <td className="py-3 px-4 text-right">
                     {onSelectTriple && (
                       <button
-                        onClick={() => onSelectTriple(t.a, t.b)}
+                        onClick={() => onSelectTriple(item.a, item.b)}
                         className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-800 group-hover:underline cursor-pointer"
                       >
-                        代入计算
+                        {t.applyBtn}
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </button>
                     )}

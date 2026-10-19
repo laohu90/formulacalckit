@@ -1,24 +1,24 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>勾股定理计算器 - 直角三角形斜边计算器与最简根号形式 (a² + b² = c²)</title>
-    <meta name="description" content="专业免费的勾股定理在线计算器。输入直角三角形任意两边，智能求第三边，自动输出最简二次根号形式与精确小数，提供清晰的逐步解题步骤、面积周长及常用勾股数速查表。" />
-    <meta name="keywords" content="勾股定理计算器, 直角三角形斜边计算器, 勾股数在线查询, a²+b²=c², 毕达哥拉斯定理, 求斜边, 最简二次根式, 直角三角形计算" />
-    <meta name="author" content="勾股定理在线实验室" />
+    <title>Pythagorean Theorem Calculator - Right Triangle Solver with Simplified Radicals (a² + b² = c²)</title>
+    <meta name="description" content="Free online Pythagorean theorem calculator. Solve for hypotenuse or legs with automatic radical simplification (e.g. 2√5), step-by-step mathematical proof, triangle geometry metrics, and Pythagorean triples table." />
+    <meta name="keywords" content="Pythagorean theorem calculator, hypotenuse calculator, right triangle solver, simplify radicals, pythagorean triples, a2+b2=c2, find missing side of triangle, exact radical form, 勾股定理计算器, 直角三角形斜边计算器, 勾股数在线查询" />
+    <meta name="author" content="Pythagoras Math Lab" />
     <meta name="robots" content="index, follow" />
 
     <!-- OpenGraph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="勾股定理计算器 - 直角三角形斜边计算器与最简根号" />
-    <meta property="og:description" content="输入两边求第三边，自动输出最简二次根号与小数，附带几何图形与完整解题步骤。" />
-    <meta property="og:site_name" content="勾股定理在线计算器" />
+    <meta property="og:title" content="Pythagorean Theorem Calculator - Exact Radical & Hypotenuse Solver" />
+    <meta property="og:description" content="Solve for hypotenuse or legs with automated square root reduction, exact radicals, dynamic SVG diagram, and step-by-step solution." />
+    <meta property="og:site_name" content="Pythagorean Theorem Calculator" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="勾股定理计算器 - 在线求斜边与最简根式" />
-    <meta name="twitter:description" content="专业直角三角形计算工具，自动化简最简根号，含勾股数在线查询与解题步骤。" />
+    <meta name="twitter:title" content="Pythagorean Theorem Calculator - Right Triangle Solver" />
+    <meta name="twitter:description" content="Automated radical simplification, step-by-step derivations, and Pythagorean triples lookup." />
 
     <!-- Schema.org WebApplication & FAQPage JSON-LD -->
     <script type="application/ld+json">
@@ -27,11 +27,11 @@
       "@graph": [
         {
           "@type": "WebApplication",
-          "name": "勾股定理计算器 (Pythagorean Calculator)",
+          "name": "Pythagorean Theorem Calculator / 勾股定理计算器",
           "applicationCategory": "EducationalApplication",
           "operatingSystem": "All",
-          "inLanguage": "zh-CN",
-          "description": "在线直角三角形求边长计算器，支持输入直角边或斜边求第三边，自动输出最简二次根式与详细运算步骤。",
+          "inLanguage": ["en", "zh-CN"],
+          "description": "Online right triangle hypotenuse and leg solver with automated radical simplification, exact fractional form, dynamic SVG visualizer, and step-by-step mathematical solutions.",
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -43,26 +43,26 @@
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "勾股定理的计算公式是什么？",
+              "name": "What is the formula for the Pythagorean Theorem?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "在直角三角形中，两直角边长度的平方和等于斜边长度的平方，即 a² + b² = c²。求斜边公式为 c = √(a² + b²)；求直角边公式为 a = √(c² - b²) 或 b = √(c² - a²)。"
+                "text": "In any right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides: a² + b² = c². To solve for hypotenuse: c = √(a² + b²). To solve for a leg: a = √(c² - b²) or b = √(c² - a²)."
               }
             },
             {
               "@type": "Question",
-              "name": "什么是常见的勾股数？",
+              "name": "How does this calculator simplify radicals automatically?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "能够满足 a² + b² = c² 的三个正整数组合称为勾股数（毕氏三元数）。最常见的基础勾股数包括 (3, 4, 5)、(5, 12, 13)、(7, 24, 25)、(8, 15, 17)、(9, 40, 41)、(12, 35, 37) 等。"
+                "text": "The calculator performs prime factorization on the radicand to extract all perfect square factors. For instance, √20 = √(4 × 5) = 2√5, and √18 = √(9 × 2) = 3√2, giving you the exact simplest radical form."
               }
             },
             {
               "@type": "Question",
-              "name": "计算结果如果不是整数，如何化简为最简根号？",
+              "name": "What are common Pythagorean triples?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "本计算器会自动对根号内的被开方数进行质因数分解，提取所有完全平方因子。例如 √(18) = √(9 × 2) = 3√2，√(20) = √(4 × 5) = 2√5，同时输出精确的小数逼近值。"
+                "text": "Common primitive Pythagorean triples include (3, 4, 5), (5, 12, 13), (7, 24, 25), (8, 15, 17), (9, 40, 41), and (20, 21, 29). Multiplying by any positive integer creates derived triples such as (6, 8, 10)."
               }
             }
           ]
@@ -76,4 +76,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

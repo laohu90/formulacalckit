@@ -2,7 +2,10 @@
  * Pythagorean Theorem Math Engine
  * Supports exact radical simplification, fraction handling, step-by-step derivation,
  * geometric properties (angles, area, height, inradius, circumradius), and triples.
+ * Fully bilingual (en / zh).
  */
+
+import { Language } from '../i18n/translations';
 
 export interface RadicalResult {
   exactString: string; // e.g. "2√5", "5", "√3", "13/2", "3√2/2"
@@ -114,7 +117,7 @@ export function factorSquare(n: number): { squareRoot: number; remainder: number
 }
 
 // Simplify square root of a positive real number (e.g. 20 -> 2√5, 18 -> 3√2, 6.25 -> 5/2)
-export function simplifyRadical(radicand: number): RadicalResult {
+export function simplifyRadical(radicand: number, lang: Language = 'en'): RadicalResult {
   const decimalVal = Math.sqrt(radicand);
   const steps: string[] = [];
 
@@ -126,7 +129,11 @@ export function simplifyRadical(radicand: number): RadicalResult {
 
     if (remainder === 1) {
       // Perfect square integer
-      steps.push(`√${num} 为完全平方数，直接开方得 ${squareRoot}`);
+      steps.push(
+        lang === 'zh'
+          ? `√${num} 为完全平方数，直接开方得 ${squareRoot}`
+          : `√${num} is a perfect square; square root evaluates to integer ${squareRoot}`
+      );
       return {
         exactString: `${squareRoot}`,
         radicandRaw: radicand,
@@ -143,7 +150,11 @@ export function simplifyRadical(radicand: number): RadicalResult {
 
     if (squareRoot === 1) {
       // Already square-free prime or product of distinct primes
-      steps.push(`被开方数 ${num} 无大于1的平方因子，已是最简二次根式`);
+      steps.push(
+        lang === 'zh'
+          ? `被开方数 ${num} 无大于1的平方因子，已是最简二次根式`
+          : `Radicand ${num} has no square factor greater than 1; already in simplest radical form`
+      );
       return {
         exactString: `√${remainder}`,
         radicandRaw: radicand,
@@ -159,8 +170,16 @@ export function simplifyRadical(radicand: number): RadicalResult {
     }
 
     // Can factor out squareRoot
-    steps.push(`将被开方数因数分解: ${num} = ${squareFactor} × ${remainder} = ${squareRoot}² × ${remainder}`);
-    steps.push(`提取平方因子: √${num} = √(${squareRoot}² × ${remainder}) = ${squareRoot}√${remainder}`);
+    steps.push(
+      lang === 'zh'
+        ? `将被开方数因数分解: ${num} = ${squareFactor} × ${remainder} = ${squareRoot}² × ${remainder}`
+        : `Prime factorize radicand: ${num} = ${squareFactor} × ${remainder} = ${squareRoot}² × ${remainder}`
+    );
+    steps.push(
+      lang === 'zh'
+        ? `提取平方因子: √${num} = √(${squareRoot}² × ${remainder}) = ${squareRoot}√${remainder}`
+        : `Extract perfect square factor: √${num} = √(${squareRoot}² × ${remainder}) = ${squareRoot}√${remainder}`
+    );
 
     return {
       exactString: `${squareRoot}√${remainder}`,
@@ -185,10 +204,19 @@ export function simplifyRadical(radicand: number): RadicalResult {
   const finalOutside = squareRoot / g;
   const finalDen = den / g;
 
-  steps.push(`转为分式形式: √(${num}/${den})`);
+  steps.push(
+    lang === 'zh'
+      ? `转为分式形式: √(${num}/${den})`
+      : `Convert to fractional radicand: √(${num}/${den})`
+  );
+
   if (remainder === 1) {
     if (finalDen === 1) {
-      steps.push(`分子分母开方整除，结果为整数 ${finalOutside}`);
+      steps.push(
+        lang === 'zh'
+          ? `分子分母开方整除，结果为整数 ${finalOutside}`
+          : `Radicand resolves directly to integer ${finalOutside}`
+      );
       return {
         exactString: `${finalOutside}`,
         radicandRaw: radicand,
@@ -202,7 +230,11 @@ export function simplifyRadical(radicand: number): RadicalResult {
         decimalValue: decimalVal
       };
     } else {
-      steps.push(`开方后得到有理分式: ${finalOutside}/${finalDen}`);
+      steps.push(
+        lang === 'zh'
+          ? `开方后得到有理分式: ${finalOutside}/${finalDen}`
+          : `Radicand resolves to rational fraction: ${finalOutside}/${finalDen}`
+      );
       return {
         exactString: `${finalOutside}/${finalDen}`,
         radicandRaw: radicand,
@@ -230,11 +262,23 @@ export function simplifyRadical(radicand: number): RadicalResult {
     exactStr = `(${finalOutside}√${remainder})/${finalDen}`;
   }
 
-  steps.push(`分母有理化: √(${num}/${den}) = √(${num} × ${den}) / ${den} = √${product} / ${den}`);
+  steps.push(
+    lang === 'zh'
+      ? `分母有理化: √(${num}/${den}) = √(${num} × ${den}) / ${den} = √${product} / ${den}`
+      : `Rationalize denominator: √(${num}/${den}) = √(${num} × ${den}) / ${den} = √${product} / ${den}`
+  );
   if (squareFactor > 1) {
-    steps.push(`因数分解提取平方数: ${product} = ${squareFactor} × ${remainder} = ${squareRoot}² × ${remainder}`);
+    steps.push(
+      lang === 'zh'
+        ? `因数分解提取平方数: ${product} = ${squareFactor} × ${remainder} = ${squareRoot}² × ${remainder}`
+        : `Factorize numerator: ${product} = ${squareFactor} × ${remainder} = ${squareRoot}² × ${remainder}`
+    );
   }
-  steps.push(`化简得到最简二次根式: ${exactStr}`);
+  steps.push(
+    lang === 'zh'
+      ? `化简得到最简二次根式: ${exactStr}`
+      : `Simplest exact radical result: ${exactStr}`
+  );
 
   return {
     exactString: exactStr,
@@ -255,10 +299,16 @@ export function solvePythagorean(
   target: 'c' | 'a' | 'b',
   val1: number,
   val2: number,
-  unit = ''
+  unit = '',
+  lang: Language = 'en'
 ): { error?: string; result?: SolveResult } {
   if (isNaN(val1) || isNaN(val2) || val1 <= 0 || val2 <= 0) {
-    return { error: '请输入大于 0 的有效边长数值。' };
+    return {
+      error:
+        lang === 'zh'
+          ? '请输入大于 0 的有效边长数值。'
+          : 'Please enter valid side length numbers strictly greater than 0.'
+    };
   }
 
   let a = 0;
@@ -286,7 +336,12 @@ export function solvePythagorean(
     c = val1;
     b = val2;
     if (c <= b) {
-      return { error: `斜边 c (${c}) 必须严格大于直角边 b (${b})。在直角三角形中斜边永远是最长边！` };
+      return {
+        error:
+          lang === 'zh'
+            ? `斜边 c (${c}) 必须严格大于直角边 b (${b})。在直角三角形中斜边永远是最长边！`
+            : `Hypotenuse c (${c}) must be strictly greater than leg b (${b}). In a right triangle, hypotenuse is always the longest side!`
+      };
     }
     radicand = c * c - b * b;
     a = Math.sqrt(radicand);
@@ -301,7 +356,12 @@ export function solvePythagorean(
     c = val1;
     a = val2;
     if (c <= a) {
-      return { error: `斜边 c (${c}) 必须严格大于直角边 a (${a})。在直角三角形中斜边永远是最长边！` };
+      return {
+        error:
+          lang === 'zh'
+            ? `斜边 c (${c}) 必须严格大于直角边 a (${a})。在直角三角形中斜边永远是最长边！`
+            : `Hypotenuse c (${c}) must be strictly greater than leg a (${a}). In a right triangle, hypotenuse is always the longest side!`
+      };
     }
     radicand = c * c - a * a;
     b = Math.sqrt(radicand);
@@ -312,7 +372,7 @@ export function solvePythagorean(
     radStr = `√${roundDisplay(radicand)}`;
   }
 
-  const radical = simplifyRadical(radicand);
+  const radical = simplifyRadical(radicand, lang);
 
   // Geometric calculations
   const angleAlphaRad = Math.asin(a / c);
@@ -408,12 +468,26 @@ export const COMMON_TRIPLES: PythagoreanTriple[] = [
 ];
 
 // Generate triple from Euclid's formula: m > n > 0
-export function generateEuclidTriple(m: number, n: number): { triple?: PythagoreanTriple; error?: string } {
+export function generateEuclidTriple(
+  m: number,
+  n: number,
+  lang: Language = 'en'
+): { triple?: PythagoreanTriple; error?: string } {
   if (m <= n) {
-    return { error: '参数 m 必须大于参数 n。' };
+    return {
+      error:
+        lang === 'zh'
+          ? '参数 m 必须大于参数 n。'
+          : 'Parameter m must be strictly greater than parameter n.'
+    };
   }
   if (m <= 0 || n <= 0) {
-    return { error: '参数 m 和 n 必须为正整数。' };
+    return {
+      error:
+        lang === 'zh'
+          ? '参数 m 和 n 必须为正整数。'
+          : 'Parameters m and n must be positive integers.'
+    };
   }
   const a = m * m - n * n;
   const b = 2 * m * n;
@@ -433,7 +507,12 @@ export function generateEuclidTriple(m: number, n: number): { triple?: Pythagore
 }
 
 // Validate if 3 numbers form a Pythagorean Triple
-export function validateTriple(x: number, y: number, z: number): {
+export function validateTriple(
+  x: number,
+  y: number,
+  z: number,
+  lang: Language = 'en'
+): {
   isValid: boolean;
   isPrimitive: boolean;
   sorted: [number, number, number];
@@ -444,7 +523,10 @@ export function validateTriple(x: number, y: number, z: number): {
       isValid: false,
       isPrimitive: false,
       sorted: [x, y, z],
-      message: '勾股数必须全部为正整数。'
+      message:
+        lang === 'zh'
+          ? '勾股数必须全部为正整数。'
+          : 'Pythagorean triple elements must all be positive integers.'
     };
   }
   const arr = [x, y, z].sort((a, b) => a - b) as [number, number, number];
@@ -455,13 +537,22 @@ export function validateTriple(x: number, y: number, z: number): {
   let message = '';
   if (isValid) {
     if (isPrimitive) {
-      message = `(${a}, ${b}, ${c}) 是标准的【本原勾股数】！满足 ${a}² + ${b}² = ${c}² 且三数互质。`;
+      message =
+        lang === 'zh'
+          ? `(${a}, ${b}, ${c}) 是标准的【本原勾股数】！满足 ${a}² + ${b}² = ${c}² 且三数互质。`
+          : `(${a}, ${b}, ${c}) is a valid Primitive Pythagorean Triple! Satisfies ${a}² + ${b}² = ${c}² and is coprime.`;
     } else {
       const g = gcd(gcd(a, b), c);
-      message = `(${a}, ${b}, ${c}) 是勾股数（派生组），它们拥有最大公约数 ${g}，其基底本原勾股数为 (${a / g}, ${b / g}, ${c / g})。`;
+      message =
+        lang === 'zh'
+          ? `(${a}, ${b}, ${c}) 是勾股数（派生组），拥有最大公约数 ${g}，其基底本原勾股数为 (${a / g}, ${b / g}, ${c / g})。`
+          : `(${a}, ${b}, ${c}) is a derived Pythagorean Triple with greatest common divisor ${g}. Its primitive base is (${a / g}, ${b / g}, ${c / g}).`;
     }
   } else {
-    message = `(${a}, ${b}, ${c}) 不是勾股数。因为 ${a}² + ${b}² = ${a * a + b * b}，而 ${c}² = ${c * c}，两者不相等。`;
+    message =
+      lang === 'zh'
+        ? `(${a}, ${b}, ${c}) 不是勾股数。因为 ${a}² + ${b}² = ${a * a + b * b}，而 ${c}² = ${c * c}，两者不相等。`
+        : `(${a}, ${b}, ${c}) is not a Pythagorean Triple. Because ${a}² + ${b}² = ${a * a + b * b}, while ${c}² = ${c * c}, which are not equal.`;
   }
 
   return {

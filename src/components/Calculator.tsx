@@ -3,8 +3,10 @@ import { RotateCcw, HelpCircle, History, Trash2, ArrowRight } from 'lucide-react
 import { solvePythagorean, SolveResult } from '../utils/pythagorean';
 import { ResultDisplay } from './ResultDisplay';
 import { TriangleVisualizer } from './TriangleVisualizer';
+import { Language, translations } from '../i18n/translations';
 
 interface Props {
+  lang: Language;
   onCalculationChange?: (result: SolveResult | null) => void;
   presetInjection?: { target: 'c' | 'a' | 'b'; val1: number; val2: number; timestamp: number } | null;
 }
@@ -19,7 +21,7 @@ interface HistoryItem {
   resultStr: string;
 }
 
-export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjection }) => {
+export const Calculator: React.FC<Props> = ({ lang, onCalculationChange, presetInjection }) => {
   const [target, setTarget] = useState<'c' | 'a' | 'b'>('c');
   const [val1, setVal1] = useState<string>('3');
   const [val2, setVal2] = useState<string>('4');
@@ -27,6 +29,8 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
   const [precision, setPrecision] = useState<number>(4);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [showHistoryModal, setShowHistoryModal] = useState<boolean>(false);
+
+  const t = translations[lang].calc;
 
   // React to external preset injections (e.g. from Triples table or Special Triangles)
   useEffect(() => {
@@ -42,24 +46,27 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
     switch (target) {
       case 'c':
         return {
-          title1: '直角边 a',
-          title2: '直角边 b',
-          targetTitle: '斜边 c',
-          formula: 'c = √(a² + b²)'
+          title1: t.legA,
+          title2: t.legB,
+          hint1: t.hintLeg1,
+          hint2: t.hintLeg2,
+          formula: t.targetCFormula
         };
       case 'a':
         return {
-          title1: '斜边 c (最长边)',
-          title2: '直角边 b',
-          targetTitle: '直角边 a',
-          formula: 'a = √(c² - b²)'
+          title1: t.hypotenuseLongest,
+          title2: t.legB,
+          hint1: t.hintHypotenuse,
+          hint2: t.hintLeg2,
+          formula: t.targetAFormula
         };
       case 'b':
         return {
-          title1: '斜边 c (最长边)',
-          title2: '直角边 a',
-          targetTitle: '直角边 b',
-          formula: 'b = √(c² - a²)'
+          title1: t.hypotenuseLongest,
+          title2: t.legA,
+          hint1: t.hintHypotenuse,
+          hint2: t.hintLeg1,
+          formula: t.targetBFormula
         };
     }
   };
@@ -69,7 +76,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
   // Run calculation
   const num1 = parseFloat(val1);
   const num2 = parseFloat(val2);
-  const calculation = solvePythagorean(target, num1, num2, unit);
+  const calculation = solvePythagorean(target, num1, num2, unit, lang);
 
   // Sync with parent if needed
   useEffect(() => {
@@ -89,29 +96,6 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
       // ignore
     }
   }, []);
-
-  // Save successful calculation into history
-  const handleSaveToHistory = (res: SolveResult) => {
-    const item: HistoryItem = {
-      id: Date.now().toString(),
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      target: res.target,
-      val1: target === 'c' ? res.a : res.c,
-      val2: target === 'c' ? res.b : target === 'a' ? res.b : res.a,
-      unit: res.unit,
-      resultStr: `${res.target} = ${res.radical.exactString} (≈ ${res.radical.decimalValue.toFixed(precision)})`
-    };
-
-    setHistory((prev) => {
-      const updated = [item, ...prev.filter(h => h.resultStr !== item.resultStr).slice(0, 9)];
-      try {
-        localStorage.setItem('pythagorean_history', JSON.stringify(updated));
-      } catch {
-        // ignore
-      }
-      return updated;
-    });
-  };
 
   // Quick preset loader
   const applyPreset = (newTarget: 'c' | 'a' | 'b', v1: number, v2: number) => {
@@ -134,7 +118,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <label className="text-sm font-bold text-slate-800 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-blue-600" />
-            第一步：选择计算目标（输入两边求第三边）
+            {t.step1}
           </label>
           <div className="flex items-center gap-3">
             <button
@@ -142,14 +126,14 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
               className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-blue-600 font-medium cursor-pointer transition-colors"
             >
               <History className="w-3.5 h-3.5" />
-              历史记录 ({history.length})
+              {t.history} ({history.length})
             </button>
             <button
               onClick={handleReset}
               className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 cursor-pointer transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              重置
+              {t.reset}
             </button>
           </div>
         </div>
@@ -164,7 +148,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
-            <span>求斜边 c (推荐)</span>
+            <span>{t.targetC}</span>
             <span className="text-[11px] font-normal text-slate-500 font-mono">c = √(a² + b²)</span>
           </button>
 
@@ -172,7 +156,6 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
             type="button"
             onClick={() => {
               setTarget('a');
-              // Make sure hypotenuse > leg
               if (num1 <= num2) {
                 setVal1('5');
                 setVal2('4');
@@ -184,7 +167,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
-            <span>求直角边 a</span>
+            <span>{t.targetA}</span>
             <span className="text-[11px] font-normal text-slate-500 font-mono">a = √(c² - b²)</span>
           </button>
 
@@ -203,7 +186,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
-            <span>求直角边 b</span>
+            <span>{t.targetB}</span>
             <span className="text-[11px] font-normal text-slate-500 font-mono">b = √(c² - a²)</span>
           </button>
         </div>
@@ -223,7 +206,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
               min="0.0001"
               value={val1}
               onChange={(e) => setVal1(e.target.value)}
-              placeholder="请输入边长数值"
+              placeholder={t.inputPlaceholder}
               className="w-full bg-white px-4 py-3 text-lg font-mono font-bold text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
             />
             {unit && (
@@ -233,7 +216,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
             )}
           </div>
           <span className="text-[11px] text-slate-500 mt-1.5 block">
-            {target === 'c' ? '输入第一条直角边' : '输入斜边 c（必须为三角形最长边）'}
+            {labels.hint1}
           </span>
         </div>
 
@@ -249,7 +232,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
               min="0.0001"
               value={val2}
               onChange={(e) => setVal2(e.target.value)}
-              placeholder="请输入边长数值"
+              placeholder={t.inputPlaceholder}
               className="w-full bg-white px-4 py-3 text-lg font-mono font-bold text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
             />
             {unit && (
@@ -259,7 +242,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
             )}
           </div>
           <span className="text-[11px] text-slate-500 mt-1.5 block">
-            {target === 'c' ? '输入第二条直角边' : '输入已知的另一条直角边'}
+            {labels.hint2}
           </span>
         </div>
       </div>
@@ -269,42 +252,42 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
         <div className="flex flex-wrap items-center gap-4">
           {/* Unit selection */}
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-600">度量单位:</span>
+            <span className="font-semibold text-slate-600">{t.unitLabel}</span>
             <select
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
-              aria-label="选择长度度量单位"
+              aria-label={t.unitLabel}
               className="bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-2xs"
             >
-              <option value="cm">厘米 (cm)</option>
-              <option value="m">米 (m)</option>
-              <option value="mm">毫米 (mm)</option>
-              <option value="in">英寸 (in)</option>
-              <option value="ft">英尺 (ft)</option>
-              <option value="">无单位 (Pure)</option>
+              <option value="cm">{t.units.cm}</option>
+              <option value="m">{t.units.m}</option>
+              <option value="mm">{t.units.mm}</option>
+              <option value="in">{t.units.in}</option>
+              <option value="ft">{t.units.ft}</option>
+              <option value="">{t.units.pure}</option>
             </select>
           </div>
 
           {/* Decimal Precision */}
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-600">小数精度:</span>
+            <span className="font-semibold text-slate-600">{t.precisionLabel}</span>
             <select
               value={precision}
               onChange={(e) => setPrecision(parseInt(e.target.value, 10))}
-              aria-label="选择计算结果小数精度"
+              aria-label={t.precisionLabel}
               className="bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-2xs"
             >
-              <option value={2}>2位小数 (0.01)</option>
-              <option value={4}>4位小数 (0.0001)</option>
-              <option value={6}>6位小数 (0.000001)</option>
-              <option value={8}>8位高精度</option>
+              <option value={2}>{t.precisions.p2}</option>
+              <option value={4}>{t.precisions.p4}</option>
+              <option value={6}>{t.precisions.p6}</option>
+              <option value={8}>{t.precisions.p8}</option>
             </select>
           </div>
         </div>
 
         {/* Quick Presets */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-          <span className="text-slate-400 font-medium">经典范例:</span>
+          <span className="text-slate-400 font-medium">{t.presetsLabel}</span>
           <button
             onClick={() => applyPreset('c', 3, 4)}
             className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 transition-colors cursor-pointer font-mono font-medium"
@@ -339,7 +322,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
             onClick={() => applyPreset('a', 10, 6)}
             className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 transition-colors cursor-pointer font-mono font-medium"
           >
-            10 & 6 (求a)
+            10 & 6
           </button>
         </div>
       </div>
@@ -350,7 +333,7 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
               <History className="w-3.5 h-3.5 text-blue-700" />
-              本地计算历史记录 (最近 10 次)
+              {t.historyTitle}
             </h4>
             {history.length > 0 && (
               <button
@@ -361,13 +344,13 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
                 className="text-xs text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
               >
                 <Trash2 className="w-3 h-3" />
-                清空记录
+                {t.clearHistory}
               </button>
             )}
           </div>
 
           {history.length === 0 ? (
-            <p className="text-xs text-slate-500 py-2">暂无历史计算记录，开始计算后会自动记录在此。</p>
+            <p className="text-xs text-slate-500 py-2">{t.noHistory}</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {history.map((h) => (
@@ -400,7 +383,9 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
         <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
           <HelpCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-bold mb-1">输入提示</h4>
+            <h4 className="font-bold mb-1">
+              {lang === 'zh' ? '输入提示' : 'Input Notice'}
+            </h4>
             <p className="leading-relaxed">{calculation.error}</p>
           </div>
         </div>
@@ -411,12 +396,16 @@ export const Calculator: React.FC<Props> = ({ onCalculationChange, presetInjecti
             <ResultDisplay
               data={calculation.result}
               precision={precision}
+              lang={lang}
             />
           </div>
 
           {/* Right: SVG Triangle Visualization */}
           <div className="lg:col-span-5">
-            <TriangleVisualizer data={calculation.result} />
+            <TriangleVisualizer
+              data={calculation.result}
+              lang={lang}
+            />
           </div>
         </div>
       ) : null}
