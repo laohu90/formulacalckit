@@ -1,0 +1,8 @@
+# Robots.txt for Pythagorean Theorem Calculator
+# Allow all crawlers including Googlebot to index all pages
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: /sitemap.xml

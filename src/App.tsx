@@ -18,19 +18,36 @@ import { SeoContent } from './components/SeoContent';
 import { Language, translations } from './i18n/translations';
 
 export default function App() {
-  // Default to English as requested ("默认为英文智能切换")
+  // Default to English as requested, but respect URL query param ?lang= for Googlebot
   const [lang, setLang] = useState<Language>(() => {
     try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const urlLang = params.get('lang');
+        if (urlLang === 'zh' || urlLang === 'en') return urlLang;
+      }
       const saved = localStorage.getItem('pythagorean_lang') as Language;
       if (saved === 'en' || saved === 'zh') return saved;
-      // Default to English
       return 'en';
     } catch {
       return 'en';
     }
   });
 
-  const [activeTab, setActiveTab] = useState<'calc' | 'triples' | 'special' | 'guide'>('calc');
+  const [activeTab, setActiveTab] = useState<'calc' | 'triples' | 'special' | 'guide'>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const hash = window.location.hash.replace('#', '');
+        if (hash === 'triples' || hash === 'special' || hash === 'guide') {
+          return hash;
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return 'calc';
+  });
+
   const [copiedLink, setCopiedLink] = useState(false);
   const [presetInjection, setPresetInjection] = useState<{
     target: 'c' | 'a' | 'b';
@@ -64,11 +81,29 @@ export default function App() {
     }
   }, [lang, t]);
 
-  // Language switch handler
+  // Language switch handler with URL sync
   const handleToggleLanguage = (newLang: Language) => {
     setLang(newLang);
     try {
       localStorage.setItem('pythagorean_lang', newLang);
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', newLang);
+        window.history.replaceState({}, '', url.toString());
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleTabChange = (tab: 'calc' | 'triples' | 'special' | 'guide') => {
+    setActiveTab(tab);
+    try {
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.hash = tab === 'calc' ? '' : tab;
+        window.history.replaceState({}, '', url.toString());
+      }
     } catch {
       // ignore
     }
@@ -130,7 +165,7 @@ export default function App() {
           {/* Desktop Nav Pills */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
             <button
-              onClick={() => setActiveTab('calc')}
+              onClick={() => handleTabChange('calc')}
               className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'calc'
                   ? 'bg-white text-blue-700 shadow-2xs font-bold'
@@ -141,7 +176,7 @@ export default function App() {
               <span>{t.nav.calc}</span>
             </button>
             <button
-              onClick={() => setActiveTab('triples')}
+              onClick={() => handleTabChange('triples')}
               className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'triples'
                   ? 'bg-white text-blue-700 shadow-2xs font-bold'
@@ -152,7 +187,7 @@ export default function App() {
               <span>{t.nav.triples}</span>
             </button>
             <button
-              onClick={() => setActiveTab('special')}
+              onClick={() => handleTabChange('special')}
               className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'special'
                   ? 'bg-white text-blue-700 shadow-2xs font-bold'
@@ -163,7 +198,7 @@ export default function App() {
               <span>{t.nav.special}</span>
             </button>
             <button
-              onClick={() => setActiveTab('guide')}
+              onClick={() => handleTabChange('guide')}
               className={`px-3.5 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'guide'
                   ? 'bg-white text-blue-700 shadow-2xs font-bold'
@@ -228,7 +263,7 @@ export default function App() {
         {/* Mobile Sub-Navigation Bar */}
         <div className="md:hidden flex items-center justify-around border-t border-slate-100 px-2 py-2 overflow-x-auto text-xs font-medium">
           <button
-            onClick={() => setActiveTab('calc')}
+            onClick={() => handleTabChange('calc')}
             className={`px-3 py-1.5 rounded-lg shrink-0 ${
               activeTab === 'calc' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
             }`}
@@ -236,7 +271,7 @@ export default function App() {
             {t.nav.calc}
           </button>
           <button
-            onClick={() => setActiveTab('triples')}
+            onClick={() => handleTabChange('triples')}
             className={`px-3 py-1.5 rounded-lg shrink-0 ${
               activeTab === 'triples' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
             }`}
@@ -244,7 +279,7 @@ export default function App() {
             {t.nav.triples}
           </button>
           <button
-            onClick={() => setActiveTab('special')}
+            onClick={() => handleTabChange('special')}
             className={`px-3 py-1.5 rounded-lg shrink-0 ${
               activeTab === 'special' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
             }`}
@@ -252,7 +287,7 @@ export default function App() {
             {t.nav.special}
           </button>
           <button
-            onClick={() => setActiveTab('guide')}
+            onClick={() => handleTabChange('guide')}
             className={`px-3 py-1.5 rounded-lg shrink-0 ${
               activeTab === 'guide' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600'
             }`}
