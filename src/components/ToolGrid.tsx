@@ -22,6 +22,8 @@ interface ToolGridProps {
   lang: 'en' | 'zh';
   onOpenQuickSolver: (solverId: QuickSolverId, subdomainUrl?: string) => void;
   discoveredSubdomains?: string[];
+  externalSearchQuery?: string;
+  onSearchChange?: (q: string) => void;
 }
 
 export const ToolGrid: React.FC<ToolGridProps> = ({
@@ -29,9 +31,18 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
   lang,
   onOpenQuickSolver,
   discoveredSubdomains = [],
+  externalSearchQuery,
+  onSearchChange,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<ToolCategory>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
+
+  const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : localSearch;
+
+  const handleSearchChange = (q: string) => {
+    setLocalSearch(q);
+    if (onSearchChange) onSearchChange(q);
+  };
 
   const categories: Array<{ id: ToolCategory; labelEn: string; labelZh: string }> = [
     { id: 'all', labelEn: 'All Calculators', labelZh: '全部计算器' },
@@ -114,17 +125,17 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             placeholder={
               lang === 'en'
-                ? 'Search formulas (e.g. pythagorean, circle)...'
-                : '搜索公式或计算器 (如 勾股定理, 圆...)'
+                ? 'Filter calculators (e.g. pythagorean, circle)...'
+                : '筛选工具 (如 勾股定理, 圆...)'
             }
             className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs placeholder:text-slate-400 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => handleSearchChange('')}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 cursor-pointer"
             >
               ✕
@@ -143,6 +154,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
           return (
             <div
               key={tool.id}
+              id={`tool-card-${tool.id}`}
               className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 transition-all shadow-xs hover:shadow-md flex flex-col justify-between group"
             >
               <div>
@@ -232,7 +244,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
           </p>
           <button
             onClick={() => {
-              setSearchQuery('');
+              handleSearchChange('');
               setSelectedCategory('all');
             }}
             className="mt-3 text-xs text-blue-600 font-medium hover:underline cursor-pointer"

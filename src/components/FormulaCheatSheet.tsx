@@ -8,7 +8,8 @@ interface FormulaCheatSheetProps {
 interface FormulaEntry {
   titleEn: string;
   titleZh: string;
-  category: string;
+  categoryEn: string;
+  categoryZh: string;
   formula: string;
   formulaLatex: string;
   descEn: string;
@@ -26,7 +27,8 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
     {
       titleEn: 'Pythagorean Theorem',
       titleZh: '勾股定理（毕达哥拉斯定理）',
-      category: 'Geometry',
+      categoryEn: 'Geometry',
+      categoryZh: '几何',
       formula: 'a² + b² = c²',
       formulaLatex: 'c = \\sqrt{a^2 + b^2}',
       descEn:
@@ -43,7 +45,8 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
     {
       titleEn: 'Quadratic Formula',
       titleZh: '一元二次方程求根公式',
-      category: 'Algebra',
+      categoryEn: 'Algebra',
+      categoryZh: '代数',
       formula: 'x = (-b ± √(b² - 4ac)) / (2a)',
       formulaLatex: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
       descEn:
@@ -62,7 +65,8 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
     {
       titleEn: 'Circle & Sphere Geometry',
       titleZh: '圆与球体几何核心公式',
-      category: 'Geometry',
+      categoryEn: 'Geometry',
+      categoryZh: '几何',
       formula: 'A = πr², C = 2πr, V = ⁴⁄₃πr³',
       formulaLatex: 'A = \\pi r^2, \\quad V = \\frac{4}{3}\\pi r^3',
       descEn:
@@ -80,7 +84,8 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
     {
       titleEn: "Ohm's Law & Electric Power",
       titleZh: '欧姆定律与焦耳电功率',
-      category: 'Physics',
+      categoryEn: 'Physics',
+      categoryZh: '物理',
       formula: 'V = I · R, P = V · I = I²R = V²/R',
       formulaLatex: 'V = IR, \\quad P = VI = I^2 R = \\frac{V^2}{R}',
       descEn:
@@ -99,7 +104,8 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
     {
       titleEn: "Heron's Formula (Triangle Area from 3 Sides)",
       titleZh: '海伦公式（三边求任意三角形面积）',
-      category: 'Geometry',
+      categoryEn: 'Geometry',
+      categoryZh: '几何',
       formula: 'A = √(s(s-a)(s-b)(s-c)), where s = (a+b+c)/2',
       formulaLatex: 's = \\frac{a+b+c}{2}, \\quad A = \\sqrt{s(s-a)(s-b)(s-c)}',
       descEn:
@@ -168,7 +174,7 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">
-                    {item.category}
+                    {lang === 'en' ? item.categoryEn : item.categoryZh}
                   </span>
                   <h3 className="font-bold text-slate-900 text-base">
                     {lang === 'en' ? item.titleEn : item.titleZh}
@@ -187,7 +193,7 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
                 <button
                   onClick={() => handleCopy(item.formula, `f-${idx}`)}
                   className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                  title="Copy formula text"
+                  title={lang === 'en' ? 'Copy formula text' : '复制公式文本'}
                 >
                   {copiedId === `f-${idx}` ? (
                     <Check className="w-4 h-4 text-emerald-600" />
@@ -218,13 +224,13 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
                 </div>
 
                 {/* Example calculation */}
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80">
-                  <h4 className="font-semibold text-slate-800 mb-1">
-                    {lang === 'en' ? 'Practical Example:' : '实际计算范例：'}
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-2">
+                    {lang === 'en' ? 'Practical Calculation Example:' : '实际计算范例：'}
                   </h4>
-                  <p className="text-slate-600 leading-relaxed font-mono text-[11px]">
+                  <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl font-mono text-slate-700 leading-relaxed">
                     {lang === 'en' ? item.exampleEn : item.exampleZh}
-                  </p>
+                  </div>
                 </div>
               </div>
             )}

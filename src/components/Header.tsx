@@ -49,13 +49,6 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-600">
           <button
-            onClick={() => onScrollToSection('calculators')}
-            className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>{lang === 'en' ? 'Calculators Directory' : '计算工具库'}</span>
-          </button>
-          <button
             onClick={() => onScrollToSection('subdomains-network')}
             className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
           >
@@ -67,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>{lang === 'en' ? 'Calculators Directory' : '计算工具库'}</span>
+            <span>{lang === 'en' ? 'Calculators' : '计算工具库'}</span>
           </button>
           <button
             onClick={() => onScrollToSection('cheat-sheet')}
