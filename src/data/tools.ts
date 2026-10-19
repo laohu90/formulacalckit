@@ -2,6 +2,66 @@ import { ToolItem } from '../types';
 
 export const INITIAL_TOOLS: ToolItem[] = [
   {
+    id: 'linear-function-calculator',
+    nameEn: 'Linear Function & Line Equation Calculator',
+    nameZh: '一次函数解析式生成器与计算器',
+    category: 'algebra',
+    formula: 'y = kx + b',
+    descriptionEn:
+      'Find line equation from two points (x1, y1) and (x2, y2) with slope k, intercept b, standard form, and interactive graph.',
+    descriptionZh:
+      '输入两个已知坐标点秒出斜率k、截距b、解析式y=kx+b与坐标轴交点，支持分数精度与动态图像推导。',
+    subdomainUrl: 'https://linear-function-calculator.formulacalckit.com/',
+    iconName: 'TrendingUp',
+    tags: [
+      'Linear Function',
+      'Line Equation',
+      'Slope',
+      'Intercept',
+      'y=kx+b',
+      'y=mx+b',
+      '一次函数',
+      '直线方程',
+      '斜率',
+      '截距',
+      '两点求直线',
+      '初中代数',
+      'algebra',
+    ],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'linear-function-calculator.formulacalckit.com',
+  },
+  {
+    id: 'sector-calculator',
+    nameEn: 'Sector Area & Arc Length Calculator',
+    nameZh: '扇形面积与弧长计算器',
+    category: 'geometry',
+    formula: 'S = \\frac{n}{360}\\pi r^2 = \\frac{1}{2}lr',
+    descriptionEn:
+      'Calculate sector area, arc length, central angle, and perimeter with step-by-step derivations in degrees and radians.',
+    descriptionZh:
+      '求扇形面积、弧长、圆心角及周长，支持角度制与弧度制互逆推导、圆锥侧面展开图与中考几何考点。',
+    subdomainUrl: 'https://sector-calculator.formulacalckit.com/',
+    iconName: 'PieChart',
+    tags: [
+      'Sector Area',
+      'Arc Length',
+      'Central Angle',
+      'Perimeter',
+      '扇形面积',
+      '弧长计算器',
+      '圆心角',
+      '扇形公式',
+      '圆锥侧面积',
+      '初中几何',
+      'geometry',
+      'circle',
+    ],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'sector-calculator.formulacalckit.com',
+  },
+
+  {
     id: 'mathbridge',
     nameEn: 'MathBridge Formula Typography Tool',
     nameZh: '数学公式排版工具 (MathBridge)',
