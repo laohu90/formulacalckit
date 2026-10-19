@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { INITIAL_TOOLS } from './data/tools';
 import { QuickSolverId } from './types';
 import { Header } from './components/Header';
@@ -82,29 +82,18 @@ export function App() {
         <Hero
           lang={lang}
           onExploreClick={() => scrollToSection('calculators')}
-          onDnsClick={() => scrollToSection('dns-inspector')}
+          onSubsitesClick={() => scrollToSection('subdomains-network')}
           onQuickSolve={(id) => handleOpenQuickSolver(id)}
         />
 
-        {/* Cloudflare DNS Auto-Discovery Section (User Core Requirement) */}
+        {/* Live Subdomains & Dedicated Tools Matrix (Auto-Discovered & Verified) */}
         <DnsInspector
           lang={lang}
           onSyncSubdomains={handleSyncSubdomains}
+          onOpenQuickSolver={handleOpenQuickSolver}
         />
 
-        {/* AdSense Compliant Banner Slot */}
-        <div className="p-4 bg-slate-50/80 border border-dashed border-slate-200 rounded-2xl text-center">
-          <div className="text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-1">
-            {lang === 'en' ? 'Sponsored Advertisement Area (Google AdSense Ready)' : '赞助广告位预留（符合 Google AdSense 规范）'}
-          </div>
-          <div className="h-16 flex items-center justify-center text-xs text-slate-400">
-            {lang === 'en'
-              ? 'High-conversion, clean banner container placeholder (Responsive Display Ad)'
-              : '高收益自适应广告容器展示位'}
-          </div>
-        </div>
-
-        {/* Formula Calculators Directory */}
+        {/* Comprehensive Formula Calculators Directory */}
         <ToolGrid
           tools={INITIAL_TOOLS}
           lang={lang}
@@ -112,7 +101,7 @@ export function App() {
           discoveredSubdomains={discoveredSubdomains}
         />
 
-        {/* Structured Formula Cheat Sheet & Reference (SEO Content Depth) */}
+        {/* Structured Formula Cheat Sheet & Reference (SEO Content Depth & High Value) */}
         <FormulaCheatSheet lang={lang} />
       </main>
 
@@ -124,7 +113,7 @@ export function App() {
         lang={lang}
       />
 
-      {/* Footer */}
+      {/* Production Compliant Footer */}
       <Footer lang={lang} onScrollToSection={scrollToSection} />
     </div>
   );

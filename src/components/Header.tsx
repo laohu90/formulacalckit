@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cloud, Languages, Github, Menu, X } from 'lucide-react';
+import { Languages, Github, Menu, X, Globe, Layers, BookOpen } from 'lucide-react';
 
 interface HeaderProps {
   lang: 'en' | 'zh';
@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 leading-none">
-                {lang === 'en' ? 'Scientific Formula Toolbox' : '公式工具箱'}
+                {lang === 'en' ? 'Online Formula Toolbox' : '公式工具箱'}
               </p>
             </div>
           </a>
@@ -50,22 +50,24 @@ export const Header: React.FC<HeaderProps> = ({
         <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-600">
           <button
             onClick={() => onScrollToSection('calculators')}
-            className="hover:text-blue-600 transition-colors cursor-pointer"
-          >
-            {lang === 'en' ? 'Calculators Directory' : '计算器目录'}
-          </button>
-          <button
-            onClick={() => onScrollToSection('dns-inspector')}
             className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
           >
-            <Cloud className="w-3.5 h-3.5 text-blue-500" />
-            <span>{lang === 'en' ? 'Cloudflare DNS Explorer' : 'DNS 子站发现'}</span>
+            <Layers className="w-3.5 h-3.5" />
+            <span>{lang === 'en' ? 'Calculators Directory' : '计算工具库'}</span>
+          </button>
+          <button
+            onClick={() => onScrollToSection('subdomains-network')}
+            className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <Globe className="w-3.5 h-3.5 text-blue-500" />
+            <span>{lang === 'en' ? 'Sub-sites Matrix' : '子站矩阵'}</span>
           </button>
           <button
             onClick={() => onScrollToSection('cheat-sheet')}
-            className="hover:text-blue-600 transition-colors cursor-pointer"
+            className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1"
           >
-            {lang === 'en' ? 'Formula Reference' : '公式速查手册'}
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>{lang === 'en' ? 'Formula Reference' : '公式速查手册'}</span>
           </button>
         </nav>
 
@@ -112,16 +114,16 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
           >
-            {lang === 'en' ? 'Calculators Directory' : '计算器目录'}
+            {lang === 'en' ? 'Calculators Directory' : '计算工具库'}
           </button>
           <button
             onClick={() => {
-              onScrollToSection('dns-inspector');
+              onScrollToSection('subdomains-network');
               setMobileMenuOpen(false);
             }}
             className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
           >
-            {lang === 'en' ? 'Cloudflare DNS Explorer' : 'DNS 子站发现'}
+            {lang === 'en' ? 'Sub-sites Matrix' : '子站矩阵'}
           </button>
           <button
             onClick={() => {
