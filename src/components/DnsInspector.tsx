@@ -1,3 +1,4 @@
+import { resolveDynamicToolMetadata } from "../utils/subdomainResolver";
 import React, { useState, useEffect } from 'react';
 import { QuickSolverId, WorkerSubsiteTool } from '../types';
 import {
@@ -160,8 +161,13 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
       {/* Tool Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {tools.map((site) => {
-          const quickSolverId = getQuickSolverId(site.subdomain);
-          const formula = getFormulaDisplay(site.subdomain);
+          const resolved = resolveDynamicToolMetadata(site, lang);
+          const quickSolverId = resolved.quickSolverId || getQuickSolverId(site.subdomain);
+          const formula = resolved.formula;
+          const displayTitle = resolved.title;
+          const displayCategory = resolved.category;
+          const displayDesc = resolved.desc;
+          const displayIcon = resolved.icon;
 
           return (
             <div
@@ -175,8 +181,8 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <h3 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
-                      {site.icon && <span className="text-base">{site.icon}</span>}
-                      <span>{site.title}</span>
+                      {displayIcon && <span className="text-base">{displayIcon}</span>}
+                      <span>{displayTitle}</span>
                     </h3>
                     <div className="text-[11px] font-mono text-slate-400 mt-1 flex items-center gap-1">
                       <Globe className="w-3 h-3 text-slate-400" />
@@ -193,15 +199,15 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
                   <span className="inline-block px-2 py-0.5 bg-slate-50 border border-slate-200 rounded-md font-mono text-xs font-semibold text-slate-700">
                     {formula}
                   </span>
-                  {site.category && (
+                  {displayCategory && (
                     <span className="ml-2 inline-block px-1.5 py-0.5 bg-blue-50 border border-blue-100 text-[10px] font-medium text-blue-600 rounded">
-                      {site.category}
+                      {displayCategory}
                     </span>
                   )}
                 </div>
 
                 <p className="text-xs text-slate-500 leading-relaxed min-h-[2.5rem]">
-                  {site.desc}
+                  {displayDesc}
                 </p>
               </div>
 
