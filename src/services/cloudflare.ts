@@ -21,7 +21,7 @@ export const DEFAULT_DNS_CONFIG: DnsConfig = {
   apiToken: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_CLOUDFLARE_API_TOKEN) || '',
   authEmail: '',
   authKey: '',
-  zoneId: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_CLOUDFLARE_ZONE_ID) || 'c914ef51dc55517d2789d5f5294fa24c',
+  zoneId: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_CLOUDFLARE_ZONE_ID) || '',
   rootDomain: 'formulacalckit.com',
 };
 
