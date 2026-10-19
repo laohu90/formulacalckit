@@ -1,8 +1,8 @@
 # Robots.txt for Pythagorean Theorem Calculator
-# Allow all crawlers including Googlebot to index all pages
+# https://pythagorean-calculator.formulacalckit.com/
 
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: /sitemap.xml
+# Sitemap
+Sitemap: https://pythagorean-calculator.formulacalckit.com/sitemap.xml
