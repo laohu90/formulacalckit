@@ -43,8 +43,7 @@ export function resolveDynamicToolMetadata(
         ? "二元一次方程组带步骤求解，支持代入消元法与加减消元法、精确分数化简、2D函数图象交点可视化。"
         : "Step-by-step 2x2 linear system solver with substitution & elimination methods, exact fractions, and 2D graph intersection.",
       icon: "🧮",
-      quickSolverId: "quadratic",
-    };
+      };
   }
 
   // 2. Linear Function & Line Equation Calculator
@@ -84,15 +83,14 @@ export function resolveDynamicToolMetadata(
         ? "快速解一元二次方程，输出实根与复数虚根、判别式 Δ、抛物线顶点坐标及十字相乘配方步骤。"
         : "Find real and complex roots, discriminant Δ, vertex coordinates, and step-by-step factoring or formula solutions.",
       icon: "🔢",
-      quickSolverId: "quadratic",
-    };
+      };
   }
 
   // 5. MathBridge Formula Editor
   if (sub.includes("mathbridge") || sub.includes("latex") || sub.includes("omml")) {
     return {
       title: lang === "zh" ? "数学公式排版工具 (MathBridge)" : "MathBridge Formula Typography Tool",
-      formula: "\\\\sum, \\\\int, \\\\frac{d}{dx}",
+      formula: "\\sum, \\int, \\frac{d}{dx}",
       category: "Academic",
       desc: lang === "zh"
         ? "LaTeX / Word / MathML 论文级数学公式排版与转换套件，支持学术公式实时预览与导出。"
