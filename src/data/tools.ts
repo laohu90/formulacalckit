@@ -403,5 +403,33 @@ export const INITIAL_TOOLS: ToolItem[] = [
       '物理',
     ],
     isVerifiedSubdomain: false,
+  },,
+  {
+    id: 'density-calculator',
+    nameEn: 'Density Calculator (ρ = m/V)',
+    nameZh: '密度计算器 (ρ = m/V)',
+    category: 'physics',
+    formula: 'ρ = \\frac{m}{V}',
+    descriptionEn:
+      'Mass, volume, and density calculation with built-in substance density table, automatic SI unit conversion, and buoyancy simulation.',
+    descriptionZh:
+      '内置常用物质密度表，质量、体积、密度三者互求，自动换算国际单位与合金混合物计算。',
+    subdomainUrl: 'https://density-calculator.formulacalckit.com/',
+    iconName: 'Scale',
+    tags: [
+      'Density',
+      'Mass',
+      'Volume',
+      'rho=m/V',
+      'Buoyancy',
+      '密度计算器',
+      '质量',
+      '体积',
+      '浮力',
+      '物理',
+      'physics',
+    ],
+    isVerifiedSubdomain: true,
+    dnsRecordName: 'density-calculator.formulacalckit.com',
   },
 ];
