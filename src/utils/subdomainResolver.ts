@@ -20,6 +20,32 @@ export function resolveDynamicToolMetadata(
 ): ResolvedToolMetadata {
   const sub = (site.subdomain || "").toLowerCase().trim();
 
+  // 0.1 Density Calculator
+  if (sub.includes("density")) {
+    return {
+      title: lang === "zh" ? "密度计算公式工具" : "Density Calculator",
+      formula: "\\rho = \\frac{m}{V}",
+      category: "Physics",
+      desc: lang === "zh"
+        ? "高精度密度科学在线计算器，支持质量、体积与密度三者互求，提供科学单位换算与分步推导解析。"
+        : "High-precision density calculator supporting mass, volume, and density solving with unit conversion.",
+      icon: "⚖️",
+    };
+  }
+
+  // 0.2 Fraction Calculator
+  if (sub.includes("fraction")) {
+    return {
+      title: lang === "zh" ? "分数计算器" : "Fraction Calculator",
+      formula: "\\frac{a}{b} \\pm \\frac{c}{d}",
+      category: "Mathematics",
+      desc: lang === "zh"
+        ? "分数四则混合运算、最简分数化简、带分数转换与通分步骤推导，支持高精度有理数运算。"
+        : "Fraction addition, subtraction, multiplication, division, and exact reduction with step-by-step guidance.",
+      icon: "🔢",
+    };
+  }
+
   // 1. Sector Area & Arc Length Calculator
   if (sub.includes("sector") || sub.includes("arc-length") || sub.includes("arc_length")) {
     return {
