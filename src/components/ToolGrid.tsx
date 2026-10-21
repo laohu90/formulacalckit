@@ -155,9 +155,9 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
             <div
               key={tool.id}
               id={`tool-card-${tool.id}`}
-              className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 transition-all shadow-xs hover:shadow-md flex flex-col justify-between group"
+              className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 transition-all shadow-xs hover:shadow-md flex flex-col h-full justify-between group"
             >
-              <div>
+              <div className="flex-grow flex flex-col">
                 {/* Header row: Icon & Status */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="p-2.5 bg-blue-50/80 rounded-xl border border-blue-100 group-hover:scale-105 transition-transform">
@@ -194,7 +194,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
                 </p>
 
                 {/* Clean unboxed tags with separator (Zero-pill discipline) */}
-                <div className="mt-3 flex items-center gap-1.5 text-[11px] text-slate-400 flex-wrap">
+                <div className="mt-auto pt-3 flex items-center gap-1.5 text-[11px] text-slate-400 flex-wrap">
                   {tool.tags.map((tag, tIdx) => (
                     <React.Fragment key={tag}>
                       <span>{tag}</span>
