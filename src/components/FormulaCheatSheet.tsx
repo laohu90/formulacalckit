@@ -121,10 +121,25 @@ export const FormulaCheatSheet: React.FC<FormulaCheatSheetProps> = ({ lang }) =>
     },
   ];
 
-  const handleCopy = (formula: string, id: string) => {
-    navigator.clipboard.writeText(formula);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = async (formula: string, id: string) => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(formula);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = formula;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Fallback
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    }
   };
 
   return (
