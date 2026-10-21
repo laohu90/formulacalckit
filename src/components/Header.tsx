@@ -1,5 +1,5 @@
 import React from 'react';
-import { Languages, Github, Menu, X, Globe, Layers, BookOpen } from 'lucide-react';
+import { Languages, Menu, X, Globe, Layers, BookOpen } from 'lucide-react';
 
 interface HeaderProps {
   lang: 'en' | 'zh';
@@ -76,23 +76,12 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Language Toggle Button */}
           <button
             onClick={onToggleLang}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
             title={lang === 'en' ? 'Switch to Chinese (切换为简体中文)' : 'Switch to English'}
           >
             <Languages className="w-3.5 h-3.5 text-slate-500" />
             <span>{lang === 'en' ? 'EN / 中文' : '中文 / EN'}</span>
           </button>
-
-          {/* GitHub Repo */}
-          <a
-            href="https://github.com/laohu90/formulacalckit"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-            title="GitHub Repository"
-          >
-            <Github className="w-4 h-4" />
-          </a>
 
           {/* Mobile menu trigger */}
           <button

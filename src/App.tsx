@@ -114,17 +114,42 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-12 w-full">
-        {/* Hero Section */}
-        <Hero lang={lang} />
+        {/* Unified Hero & Search Command Suite */}
+        <section className="relative rounded-3xl bg-gradient-to-b from-blue-50/70 via-slate-50/30 to-white border border-slate-200/80 px-4 sm:px-8 pt-8 pb-7 shadow-xs overflow-hidden">
+          {/* Subtle Ambient Decorative Glows */}
+          <div className="absolute -top-24 -left-24 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Intelligent Bilingual Instant Search Bar */}
-        <SearchBar
-          lang={lang}
-          tools={INITIAL_TOOLS}
-          onOpenQuickSolver={handleOpenQuickSolver}
-          onSearchChange={setSearchQuery}
-          currentQuery={searchQuery}
-        />
+          {/* Hero Header & Title */}
+          <Hero lang={lang} />
+
+          {/* Intelligent Bilingual Instant Search Bar */}
+          <SearchBar
+            lang={lang}
+            tools={INITIAL_TOOLS}
+            onOpenQuickSolver={handleOpenQuickSolver}
+            onSearchChange={setSearchQuery}
+            currentQuery={searchQuery}
+          />
+
+          {/* Clean Quality Guarantees / Platform Highlights Bar */}
+          <div className="mt-6 pt-5 border-t border-slate-200/70 max-w-2xl mx-auto flex items-center justify-center gap-4 sm:gap-8 text-[11px] font-medium text-slate-500 flex-wrap">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>{lang === 'en' ? '100% Client-Side Computing' : '100% 浏览器本地运算 · 零隐私追踪'}</span>
+            </span>
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              <span>{lang === 'en' ? 'Exact Radical & Step Solutions' : '最简二次根式化简与分步解答'}</span>
+            </span>
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+              <span>{lang === 'en' ? 'High-Precision Math Engine' : '双向中英文 · 高精度科学算法'}</span>
+            </span>
+          </div>
+        </section>
 
         {/* Featured Online Tools (Synchronized from Cloudflare Worker) */}
         <DnsInspector

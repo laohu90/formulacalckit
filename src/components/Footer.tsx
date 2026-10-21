@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Github, ExternalLink, X, FileText, Lock } from 'lucide-react';
+import { ShieldCheck, ExternalLink, X, FileText, Lock } from 'lucide-react';
 
 interface FooterProps {
   lang: 'en' | 'zh';
@@ -81,13 +81,13 @@ export const Footer: React.FC<FooterProps> = ({ lang, onScrollToSection }) => {
               </li>
               <li>
                 <a
-                  href="https://github.com/laohu90/formulacalckit"
+                  href="https://density-calculator.formulacalckit.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 inline-flex items-center gap-1 transition-colors"
                 >
-                  <span>GitHub Repository</span>
-                  <Github className="w-3 h-3 text-slate-400" />
+                  <span>Density Calculator (密度计算器)</span>
+                  <ExternalLink className="w-3 h-3 text-slate-400" />
                 </a>
               </li>
             </ul>

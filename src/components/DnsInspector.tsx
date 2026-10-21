@@ -107,30 +107,30 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
   };
 
   return (
-    <section id="subdomains-network" className="scroll-mt-20 space-y-4">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 sm:p-5">
+    <section id="subdomains-network" className="scroll-mt-20 space-y-6">
+      {/* Modern Open Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-              <Globe className="w-5 h-5 text-blue-600" />
-              <span>
-                {lang === 'en'
-                  ? 'Online Formula Tools'
-                  : '在线计算工具与应用'}
-              </span>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-2xs">
+              <Globe className="w-4 h-4 text-blue-600" />
+            </div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              {lang === 'en'
+                ? 'Featured Online Solvers'
+                : '精选在线独立计算器'}
             </h2>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 inline-flex items-center gap-1">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/70 inline-flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>
-                {tools.length} {lang === 'en' ? 'Active Tools' : '个可用工具'}
+                {tools.length} {lang === 'en' ? 'Live Tools' : '个可用工具'}
               </span>
             </span>
           </div>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
             {lang === 'en'
               ? 'Featured interactive mathematics and scientific calculation tools. Direct access with step-by-step solving.'
-              : '精选互动式科学与数学公式计算工具，支持即时计算与详细步骤推导，点击即可直接使用。'}
+              : '特色互动式科学与数学公式计算工具，支持即时计算与详细步骤推导，点击即可直接使用。'}
           </p>
         </div>
 

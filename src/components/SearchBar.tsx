@@ -194,14 +194,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const quickPills = [
     { labelEn: 'Pythagorean', labelZh: '勾股定理', query: '勾股定理' },
     { labelEn: 'Quadratic Solver', labelZh: '一元二次方程', query: '二次方程' },
-    { labelEn: 'LaTeX MathBridge', labelZh: '公式排版', query: 'LaTeX' },
+    { labelEn: 'LaTeX MathBridge', labelZh: 'LaTeX公式排版', query: 'LaTeX' },
+    { labelEn: 'Sector & Arc', labelZh: '扇形面积与弧长', query: '扇形' },
     { labelEn: 'Trigonometry', labelZh: '三角函数', query: '三角函数' },
     { labelEn: 'Circle & Sphere', labelZh: '圆与球体', query: '圆面积' },
     { labelEn: "Ohm's Law", labelZh: '欧姆定律', query: '欧姆' },
+    { labelEn: 'Density Calc', labelZh: '密度计算', query: '密度' },
   ];
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-2xl mx-auto my-2 z-30">
+    <div ref={containerRef} className="relative w-full max-w-2xl mx-auto mt-4 mb-2 z-30">
       {/* Search Input Container */}
       <div className="relative flex items-center">
         <div className="absolute left-3.5 text-slate-400 pointer-events-none flex items-center">
@@ -216,10 +218,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onFocus={() => setIsOpen(true)}
           placeholder={
             lang === 'en'
-              ? 'Search by tool, formula, or concept (e.g. pythagorean, 一元二次, LaTeX, sin)...'
-              : '搜索公式工具、符号或关键词（支持中英文，如：勾股定理、quadratic、LaTeX、三角函数）...'
+              ? 'Search by tool, formula, or concept (e.g. pythagorean, quadratic, LaTeX, sin)...'
+              : '按工具、公式或概念搜索 (例如勾股定理、一元二次、LaTeX、三角函数)...'
           }
-          className="w-full pl-11 pr-24 py-3 bg-white border border-slate-200 hover:border-blue-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-2xl text-sm font-medium text-slate-900 placeholder-slate-400 shadow-sm transition-all outline-hidden"
+          className="w-full pl-11 pr-24 py-3 bg-white border border-slate-200/90 hover:border-blue-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-2xl text-sm font-medium text-slate-900 placeholder-slate-400 shadow-xs transition-all outline-hidden"
         />
 
         {/* Clear & Shortcut Indicator */}
@@ -241,16 +243,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </div>
 
       {/* Quick Suggestions Pills (Shown below input) */}
-      <div className="mt-2.5 flex items-center gap-1.5 flex-wrap justify-center text-xs text-slate-500">
-        <span className="text-slate-400 text-[11px] font-medium flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-amber-500" />
-          <span>{lang === 'en' ? 'Quick picks:' : '推荐检索:'}</span>
+      <div className="mt-3 flex items-center gap-1.5 flex-wrap justify-center text-xs text-slate-500">
+        <span className="text-slate-400 text-[11px] font-medium flex items-center gap-1 shrink-0">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          <span>{lang === 'en' ? 'Quick picks:' : '快速精选:'}</span>
         </span>
         {quickPills.map((pill, idx) => (
           <button
             key={idx}
             onClick={() => handleSelectQuickSuggestion(pill.query)}
-            className="px-2.5 py-1 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+            className="px-2.5 py-1 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 rounded-lg text-xs font-medium transition-colors cursor-pointer shadow-2xs"
           >
             {lang === 'en' ? pill.labelEn : pill.labelZh}
           </button>

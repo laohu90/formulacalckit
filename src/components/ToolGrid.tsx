@@ -15,6 +15,7 @@ import {
   Activity,
   Calculator,
   FileText,
+  Layers,
 } from 'lucide-react';
 
 interface ToolGridProps {
@@ -100,6 +101,28 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
 
   return (
     <section id="calculators" className="space-y-6 scroll-mt-20">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shadow-2xs">
+              <Layers className="w-4 h-4 text-indigo-600" />
+            </div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              {lang === 'en' ? 'Calculators & Formulas Directory' : '科学与数学公式工具库'}
+            </h2>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70">
+              {filteredTools.length} {lang === 'en' ? 'Calculators' : '个计算工具'}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
+            {lang === 'en'
+              ? 'Multi-category scientific tools with built-in instant solving algorithms, formulas, and parameters.'
+              : '按学科分类汇集几何、代数、三角函数、物理及实用金融模型，支持即时计算与参数速算。'}
+          </p>
+        </div>
+      </div>
+
       {/* Search and Category Control Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Category Tabs (Segmented Control - Zero Pill discipline) */}
