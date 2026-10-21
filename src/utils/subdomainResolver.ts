@@ -207,40 +207,74 @@ export function resolveDynamicToolMetadata(
     };
   }
 
-  // 12. Matrix & Linear Algebra
-  if (sub.includes("matrix") || sub.includes("determinant") || sub.includes("eigen")) {
+  // 13. Statistics & Probability
+  if (sub.includes("stat") || sub.includes("prob") || sub.includes("mean") || sub.includes("variance")) {
     return {
-      title: lang === "zh" ? "矩阵与线性代数计算器 (Matrix Solver)" : "Matrix & Linear Algebra Calculator",
-      formula: "|A|, A^{-1}, Ax = b",
-      category: "Algebra",
+      title: lang === "zh" ? "统计学与概率计算器" : "Statistics & Probability Calculator",
+      formula: "\\mu = \\frac{\\sum x_i}{N}, \\sigma = \\sqrt{\\frac{\\sum (x_i-\\mu)^2}{N}}",
+      category: "Statistics",
       desc: lang === "zh"
-        ? "高斯消元求逆矩阵、行列式值计算、特征值特征向量及线性方程组求解。"
-        : "Matrix multiplication, determinant, inverse, eigenvalues, and linear equation systems.",
-      icon: "▦",
+        ? "平均数、中位数、标准差、方差及概率分布计算，支持统计数据集分析与可视化。"
+        : "Mean, median, variance, standard deviation, and probability distribution solver.",
+      icon: "📊",
     };
   }
 
-  // Dynamic Fallback: Clean Title-Cased Name
-  const formattedName = sub
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+  // 14. Financial Loan & Mortgage
+  if (sub.includes("loan") || sub.includes("mortgage") || sub.includes("emi")) {
+    return {
+      title: lang === "zh" ? "贷款与房贷分期计算器" : "Loan & Mortgage EMI Calculator",
+      formula: "M = P \\frac{r(1+r)^n}{(1+r)^n - 1}",
+      category: "Finance",
+      desc: lang === "zh"
+        ? "等额本息与等额本金还款计算、月供明细、总利息支出及还款计划表生成。"
+        : "Monthly mortgage payment, total interest, and amortization schedule calculations.",
+      icon: "🏠",
+    };
+  }
+
+  // Intelligent Semantic Fallback for any Future New Subdomain
+  const words = sub.split("-").filter(Boolean);
+  const capitalizedWords = words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  
+  // Infer category from subdomain keywords
+  let inferredCategory = "Mathematics";
+  let inferredFormula = "f(x) = \\text{Analysis}";
+  let inferredIcon = "🧮";
+
+  if (sub.includes("fin") || sub.includes("money") || sub.includes("tax") || sub.includes("pay")) {
+    inferredCategory = "Finance";
+    inferredFormula = "Value = Principal \\times (1 + rate)^t";
+    inferredIcon = "💵";
+  } else if (sub.includes("phys") || sub.includes("mech") || sub.includes("velocity") || sub.includes("force")) {
+    inferredCategory = "Physics";
+    inferredFormula = "F = m \\cdot a";
+    inferredIcon = "⚡";
+  } else if (sub.includes("geom") || sub.includes("angle") || sub.includes("triangle")) {
+    inferredCategory = "Geometry";
+    inferredFormula = "Area = \\frac{1}{2}ab \\sin C";
+    inferredIcon = "📐";
+  } else if (sub.includes("alg") || sub.includes("eq") || sub.includes("poly")) {
+    inferredCategory = "Algebra";
+    inferredFormula = "P(x) = a_n x^n + \\dots + a_0";
+    inferredIcon = "🔢";
+  }
 
   const cleanTitle = site.title && site.title !== site.title.toUpperCase()
     ? site.title
-    : `${formattedName} (公式计算工具)`;
+    : `${capitalizedWords} (${inferredCategory} Tool)`;
 
-  const cleanDesc = site.desc && !site.desc.includes("Scientific Calculation Tool") && site.desc.length > 10
+  const cleanDesc = site.desc && site.desc.length > 10
     ? site.desc
     : (lang === "zh"
-      ? "高精度科学与数学在线计算器，支持输入参数即时求解与分步推导解析。"
-      : "High-precision online calculator with instant solving and step-by-step formula analysis.");
+      ? `专业在线${capitalizedWords}计算工具，支持参数实时输入、高精度求解与详细推导解析。`
+      : `Professional online ${capitalizedWords} calculation tool with instant solving and step-by-step analysis.`);
 
   return {
     title: cleanTitle,
-    formula: site.category === "Physics" ? "E = mc^2" : "f(x) = \\text{Result}",
-    category: site.category && site.category !== "Tools" ? site.category : "Mathematics",
+    formula: inferredFormula,
+    category: inferredCategory,
     desc: cleanDesc,
-    icon: site.icon || "🧮",
+    icon: site.icon || inferredIcon,
   };
 }
