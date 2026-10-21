@@ -1,0 +1,6 @@
+{
+  "name": "FormulaCalcKit (公式计算工具集)",
+  "description": "Professional scientific, mathematical and engineering formula calculation toolkit with perfectly aligned responsive grid cards and interactive tools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
