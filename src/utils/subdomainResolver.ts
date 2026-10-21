@@ -23,7 +23,7 @@ export function resolveDynamicToolMetadata(
   // 1. Sector Area & Arc Length Calculator
   if (sub.includes("sector") || sub.includes("arc-length") || sub.includes("arc_length")) {
     return {
-      title: lang === "zh" ? "扇形面积与弧长计算器 (Sector Calculator)" : "Sector Area & Arc Length Calculator",
+      title: lang === "zh" ? "扇形面积与弧长计算器" : "Sector Area & Arc Length Calculator",
       formula: "S = \\frac{n}{360}\\pi r^2 = \\frac{1}{2}lr",
       category: "Geometry",
       desc: lang === "zh"
@@ -36,7 +36,7 @@ export function resolveDynamicToolMetadata(
   // 1.5 Linear System Solver (2x2)
   if (sub.includes("linear-system") || sub.includes("system-solver") || sub.includes("linear_system")) {
     return {
-      title: lang === "zh" ? "二元一次方程组求解器 (Linear System)" : "Linear System Solver (2x2)",
+      title: lang === "zh" ? "二元一次方程组求解器" : "Linear System Solver (2x2)",
       formula: "\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}",
       category: "Algebra",
       desc: lang === "zh"
@@ -49,7 +49,7 @@ export function resolveDynamicToolMetadata(
   // 2. Linear Function & Line Equation Calculator
   if (sub.includes("linear") || sub.includes("line-equation") || sub.includes("slope-intercept")) {
     return {
-      title: lang === "zh" ? "一次函数解析式生成器 (Linear Function)" : "Linear Function & Line Equation Calculator",
+      title: lang === "zh" ? "一次函数解析式生成器" : "Linear Function & Line Equation Calculator",
       formula: "y = kx + b",
       category: "Algebra",
       desc: lang === "zh"
@@ -62,7 +62,7 @@ export function resolveDynamicToolMetadata(
   // 3. Pythagorean Theorem Calculator
   if (sub.includes("pythagorean") || sub.includes("pythagoras") || sub.includes("hypotenuse")) {
     return {
-      title: lang === "zh" ? "勾股定理计算器 (Pythagorean Calculator)" : "Pythagorean Theorem Calculator",
+      title: lang === "zh" ? "勾股定理计算器" : "Pythagorean Theorem Calculator",
       formula: "a^2 + b^2 = c^2",
       category: "Geometry",
       desc: lang === "zh"
@@ -76,7 +76,7 @@ export function resolveDynamicToolMetadata(
   // 4. Quadratic Equation Solver
   if (sub.includes("quadratic") || sub.includes("parabola")) {
     return {
-      title: lang === "zh" ? "一元二次方程求解器 (Quadratic Solver)" : "Quadratic Equation Solver",
+      title: lang === "zh" ? "一元二次方程求解器" : "Quadratic Equation Solver",
       formula: "ax^2 + bx + c = 0",
       category: "Algebra",
       desc: lang === "zh"
@@ -89,7 +89,7 @@ export function resolveDynamicToolMetadata(
   // 5. MathBridge Formula Editor
   if (sub.includes("mathbridge") || sub.includes("latex") || sub.includes("omml")) {
     return {
-      title: lang === "zh" ? "数学公式排版工具 (MathBridge)" : "MathBridge Formula Typography Tool",
+      title: lang === "zh" ? "数学公式排版工具" : "MathBridge Formula Typography Tool",
       formula: "\\sum, \\int, \\frac{d}{dx}",
       category: "Academic",
       desc: lang === "zh"
@@ -102,7 +102,7 @@ export function resolveDynamicToolMetadata(
   // 6. Circle & Sphere Geometry
   if (sub.includes("circle") || sub.includes("sphere")) {
     return {
-      title: lang === "zh" ? "圆与球体几何计算器 (Circle & Sphere)" : "Circle & Sphere Geometry Calculator",
+      title: lang === "zh" ? "圆与球体几何计算器" : "Circle & Sphere Geometry Calculator",
       formula: "A = \\pi r^2, V = \\frac{4}{3}\\pi r^3",
       category: "Geometry",
       desc: lang === "zh"
@@ -116,7 +116,7 @@ export function resolveDynamicToolMetadata(
   // 7. Trigonometry Solver
   if (sub.includes("trig") || sub.includes("sin") || sub.includes("cos")) {
     return {
-      title: lang === "zh" ? "三角函数与直角边比值计算器 (Trigonometry)" : "Trigonometric Functions & Ratios",
+      title: lang === "zh" ? "三角函数与直角边比值计算器" : "Trigonometric Functions & Ratios",
       formula: "\\sin^2\\theta + \\cos^2\\theta = 1",
       category: "Trigonometry",
       desc: lang === "zh"
@@ -130,7 +130,7 @@ export function resolveDynamicToolMetadata(
   // 8. Ohm's Law & Physics
   if (sub.includes("ohm") || sub.includes("power") || sub.includes("circuit")) {
     return {
-      title: lang === "zh" ? "欧姆定律与电功率计算器 (Ohm's Law)" : "Ohm's Law & Electric Power Calculator",
+      title: lang === "zh" ? "欧姆定律与电功率计算器" : "Ohm's Law & Electric Power Calculator",
       formula: "V = I \\cdot R, P = V \\cdot I",
       category: "Physics",
       desc: lang === "zh"
