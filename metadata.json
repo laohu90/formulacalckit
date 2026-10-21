@@ -1,6 +1,7 @@
 {
-  "name": "FormulaCalcKit (公式计算工具集)",
-  "description": "Professional scientific, mathematical and engineering formula calculation toolkit with perfectly aligned responsive grid cards and interactive tools.",
+  "name": "勾股定理计算器",
+  "description": "专业免费的勾股定理计算器，支持输入任意两边求第三边，自动输出最简二次根号形式、逐步解题过程与勾股数速查表。",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
+
