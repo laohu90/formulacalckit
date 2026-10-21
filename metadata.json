@@ -1,6 +1,6 @@
 {
-  "name": "勾股定理计算器",
-  "description": "专业免费的勾股定理计算器，支持输入任意两边求第三边，自动输出最简二次根号形式、逐步解题过程与勾股数速查表。",
+  "name": "FormulaCalcKit 公式工具箱",
+  "description": "专业免费的科学与数学公式计算工具箱，涵盖几何定理、代数方程、物理定律与LaTeX排版，支持最简二次根式化简与分步解答。",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
