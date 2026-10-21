@@ -1,3 +1,4 @@
+import { SupportedLang, resolveInitialLanguage } from './i18n/translations';
 import React, { useState, useEffect } from 'react';
 import { INITIAL_TOOLS } from './data/tools';
 import { QuickSolverId } from './types';
@@ -12,24 +13,22 @@ import { Footer } from './components/Footer';
 
 export function App() {
   // Intelligent language detection: URL query param -> LocalStorage -> Browser locale -> fallback 'zh'
-  const [lang, setLang] = useState<'en' | 'zh'>(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlLang = urlParams.get('lang');
-      if (urlLang === 'zh' || urlLang === 'en') return urlLang;
-
-      const saved = localStorage.getItem('fck_lang');
-      if (saved === 'zh' || saved === 'en') return saved;
-
-      // Detect browser language
-      if (typeof navigator !== 'undefined' && navigator.language) {
-        const browserLang = navigator.language.toLowerCase();
-        if (browserLang.startsWith('zh')) return 'zh';
-        if (browserLang.startsWith('en')) return 'en';
-      }
-    }
-    return 'zh';
+  const [langState, setLangState] = useState<{ currentLang: SupportedLang; isAuto: boolean }>(() => {
+    const init = resolveInitialLanguage();
+    return { currentLang: init.lang, isAuto: init.isAuto };
   });
+  const lang = (langState.currentLang === 'zh' ? 'zh' : 'en') as 'en' | 'zh';
+  const isAuto = langState.isAuto;
+  const setLang = (newLang: 'en' | 'zh') => {
+    setLangState({ currentLang: newLang, isAuto: false });
+    try {
+      localStorage.setItem('fck_user_chosen_lang_v3', newLang);
+      localStorage.removeItem('fck_lang');
+    } catch {}
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', newLang);
+    window.history.pushState({}, '', url.toString());
+  };
 
   // Global search query synchronized between SearchBar and ToolGrid
   const [searchQuery, setSearchQuery] = useState('');

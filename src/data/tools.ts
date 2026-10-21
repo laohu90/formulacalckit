@@ -403,7 +403,7 @@ export const INITIAL_TOOLS: ToolItem[] = [
       '物理',
     ],
     isVerifiedSubdomain: false,
-  },,
+  },
   {
     id: 'density-calculator',
     nameEn: 'Density Calculator (ρ = m/V)',
