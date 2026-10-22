@@ -90,20 +90,14 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
   };
 
   const getQuickSolverId = (subdomain: string): QuickSolverId | undefined => {
-    const sub = subdomain.toLowerCase();
-    if (sub.includes('pythagorean')) return 'pythagorean';
-    if (sub.includes('quadratic')) return 'quadratic';
-    if (sub.includes('circle')) return 'circle';
-    if (sub.includes('trig')) return 'trigonometry';
+    const sub = subdomain.toLowerCase().replace(/\.formulacalckit\.com$/, '').trim();
+    if (sub === 'pythagorean-calculator' || sub === 'pythagorean') return 'pythagorean';
+    if (sub === 'quadratic-solver' || sub === 'quadratic') return 'quadratic';
+    if (sub === 'circle-sphere-calc' || sub === 'circle') return 'circle';
+    if (sub === 'trigonometry-solver' || sub === 'trigonometry') return 'trigonometry';
+    if (sub === 'ohms-law-calculator' || sub === 'ohms-law') return 'ohms_law';
+    if (sub === 'percentage-calculator') return 'percentage';
     return undefined;
-  };
-
-  const getFormulaDisplay = (subdomain: string): string => {
-    const sub = subdomain.toLowerCase();
-    if (sub.includes('pythagorean')) return 'a² + b² = c²';
-    if (sub.includes('quadratic')) return 'ax² + bx + c = 0';
-    if (sub.includes('mathbridge')) return '\\sum, \\int, \\frac{d}{dx}';
-    return 'f(x) = y';
   };
 
   return (
