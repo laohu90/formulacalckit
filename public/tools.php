@@ -44,7 +44,11 @@ if (isset($_GET['dir']) && !empty($_GET['dir'])) {
     $sitesDir = dirname(__DIR__);
 }
 
+// 确定缓存文件位置（若当前目录无写入权限，安全回退到系统临时目录）
 $cacheFile = __DIR__ . '/tools_cache.json';
+if ((file_exists($cacheFile) && !is_writable($cacheFile)) || (!file_exists($cacheFile) && !is_writable(__DIR__))) {
+    $cacheFile = sys_get_temp_dir() . '/fck_tools_cache.json';
+}
 $cacheTtl = 1800; // 缓存有效期 30 分钟
 $forceRefresh = isset($_GET['refresh']) && $_GET['refresh'] === '1';
 
