@@ -100,6 +100,70 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
     return undefined;
   };
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  // Compute resolved metadata for filtering & instant categorized search
+  const enrichedTools = React.useMemo(() => {
+    return tools.map((site) => {
+      const resolved = resolveDynamicToolMetadata(site, lang);
+      const quickSolverId = resolved.quickSolverId || getQuickSolverId(site.subdomain);
+      return {
+        site,
+        resolved,
+        quickSolverId,
+      };
+    });
+  }, [tools, lang]);
+
+  // Extract distinct categories with counts for thousand-scale navigation
+  const categories = React.useMemo(() => {
+    const map = new Map<string, number>();
+    for (const item of enrichedTools) {
+      const cat = item.resolved.category || (lang === 'zh' ? '实用与在线工具' : 'Utility & Tools');
+      map.set(cat, (map.get(cat) || 0) + 1);
+    }
+    const list: Array<{ id: string; label: string; count: number }> = [
+      { id: 'all', label: lang === 'zh' ? '全部' : 'All', count: enrichedTools.length }
+    ];
+    for (const [catName, count] of map.entries()) {
+      list.push({ id: catName, label: catName, count });
+    }
+    return list;
+  }, [enrichedTools, lang]);
+
+  // Fast in-memory token filter
+  const filteredItems = React.useMemo(() => {
+    let result = enrichedTools;
+    if (selectedCategory !== 'all') {
+      result = result.filter((i) => i.resolved.category === selectedCategory);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter((i) => {
+        const text = `${i.site.subdomain} ${i.site.domain} ${i.resolved.title} ${i.resolved.desc} ${i.resolved.category} ${i.resolved.tags.join(' ')}`.toLowerCase();
+        return text.includes(q);
+      });
+    }
+    return result;
+  }, [enrichedTools, selectedCategory, searchQuery]);
+
+  // Slice for high-performance rendering (eliminates DOM bloat for 1000+ items)
+  const displayedItems = React.useMemo(() => {
+    return filteredItems.slice(0, visibleCount);
+  }, [filteredItems, visibleCount]);
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setVisibleCount(12);
+  };
+
+  const handleCategoryChange = (catId: string) => {
+    setSelectedCategory(catId);
+    setVisibleCount(12);
+  };
+
   return (
     <section id="subdomains-network" className="scroll-mt-20 space-y-6">
       {/* Modern Open Section Header */}
@@ -123,8 +187,8 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
           </div>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
             {lang === 'en'
-              ? 'Featured interactive mathematics and scientific calculation tools. Direct access with step-by-step solving.'
-              : '特色互动式科学与数学公式计算工具，支持即时计算与详细步骤推导，点击即可直接使用。'}
+              ? 'Featured interactive mathematics, scientific, and navigation tools. Direct access with step-by-step solving.'
+              : '特色互动式科学、数学公式与路线导航工具，支持即时计算与独立站点直达，点击即可使用。'}
           </p>
         </div>
 
@@ -152,11 +216,57 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
         </div>
       </div>
 
-      {/* Tool Cards Grid */}
+      {/* Scalable Filter & Search Controls for Thousand-Scale Architecture */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        {/* Category Tabs with Count Badges */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl overflow-x-auto max-w-full pb-1 scrollbar-thin">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                selectedCategory === cat.id
+                  ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span>{cat.label}</span>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                selectedCategory === cat.id ? 'bg-slate-100 text-slate-700' : 'bg-slate-200/60 text-slate-500'
+              }`}>
+                {cat.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative w-full lg:w-72 shrink-0">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder={
+              lang === 'en'
+                ? `Search ${tools.length} online tools...`
+                : `在 ${tools.length} 个独立工具中检索...`
+            }
+            className="w-full pl-3 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs placeholder:text-slate-400 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => handleSearchChange('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 cursor-pointer"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Tool Cards Grid with Progressive Rendering */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {tools.map((site) => {
-          const resolved = resolveDynamicToolMetadata(site, lang);
-          const quickSolverId = resolved.quickSolverId || getQuickSolverId(site.subdomain);
+        {displayedItems.map(({ site, resolved, quickSolverId }) => {
           const formula = resolved.formula;
           const displayTitle = resolved.title;
           const displayCategory = resolved.category;
@@ -238,6 +348,49 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
           );
         })}
       </div>
+
+      {/* Empty State */}
+      {filteredItems.length === 0 && (
+        <div className="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl">
+          <p className="text-xs text-slate-500 font-medium">
+            {lang === 'en' ? 'No subsite tools found matching your criteria.' : '没有找到符合条件的独立计算器或站点。'}
+          </p>
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedCategory('all');
+            }}
+            className="mt-2 text-xs text-blue-600 font-medium hover:underline cursor-pointer"
+          >
+            {lang === 'en' ? 'Reset search and filters' : '重置搜索与分类'}
+          </button>
+        </div>
+      )}
+
+      {/* Pagination & Load More Controls for Large Datasets */}
+      {filteredItems.length > visibleCount && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100">
+          <span className="text-xs text-slate-500 font-medium">
+            {lang === 'en'
+              ? `Showing ${displayedItems.length} of ${filteredItems.length} tools`
+              : `已显示 ${displayedItems.length} / ${filteredItems.length} 个工具`}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 12)}
+              className="px-4 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs transition-all cursor-pointer"
+            >
+              {lang === 'en' ? `Load 12 More (${filteredItems.length - displayedItems.length} remaining)` : `加载更多 12 项 (剩余 ${filteredItems.length - displayedItems.length} 项)`}
+            </button>
+            <button
+              onClick={() => setVisibleCount(filteredItems.length)}
+              className="px-3 py-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
+            >
+              {lang === 'en' ? 'Show All' : '展开全部'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Clean Status Footer */}
       {lastSyncTime && (
