@@ -149,40 +149,72 @@ export const FALLBACK_WORKER_TOOLS: WorkerSubsiteTool[] = [
 /**
  * Fetch live active subdomains from the Cloudflare Worker DNS API
  * Automatically reflects new sites added or removed from Cloudflare DNS!
+/**
+ * Candidate endpoints for live PHP directory scanner.
+ * Supports dedicated tools subdomain, local path rewrite, and root domain.
  */
-export const LIVE_PHP_SCANNER_URL =
+export const PHP_SCANNER_CANDIDATE_URLS = [
+  "https://tools.formulacalckit.com/",
+  "https://tools.formulacalckit.com/tools.php",
+  "https://tools.formulacalckit.com/index.php",
   typeof window !== "undefined" && window.location.origin.includes("formulacalckit.com")
     ? "/tools.php"
-    : "https://formulacalckit.com/tools.php";
+    : "https://formulacalckit.com/tools.php",
+];
+
+export const LIVE_PHP_SCANNER_URL = PHP_SCANNER_CANDIDATE_URLS[0];
+
+function decodeHtmlEntities(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+}
 
 /**
  * Safely fetch live tools from server tools.php scanner with timeout & content-type protection
  */
 async function fetchPhpServerTools(): Promise<WorkerSubsiteTool[]> {
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 4000);
-    const res = await fetch(LIVE_PHP_SCANNER_URL, {
-      method: "GET",
-      headers: { Accept: "application/json" },
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
+  for (const url of PHP_SCANNER_CANDIDATE_URLS) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch(url, {
+        method: "GET",
+        headers: { Accept: "application/json" },
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
 
-    if (res.ok) {
-      const text = await res.text();
-      // Guard against HTML rewrites from single page application hosts
-      if (text.trim().startsWith("{") || text.trim().startsWith("[")) {
-        const data = JSON.parse(text);
-        if (data && data.success && Array.isArray(data.tools)) {
-          return data.tools;
-        } else if (Array.isArray(data)) {
-          return data;
+      if (res.ok) {
+        const text = await res.text();
+        const trimmed = text.trim();
+        // Guard against HTML rewrites from single page application hosts
+        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+          const data = JSON.parse(trimmed);
+          let rawList: WorkerSubsiteTool[] = [];
+          if (data && data.success && Array.isArray(data.tools)) {
+            rawList = data.tools;
+          } else if (Array.isArray(data)) {
+            rawList = data;
+          }
+
+          if (rawList.length > 0) {
+            return rawList.map((tool) => ({
+              ...tool,
+              title: decodeHtmlEntities(tool.title || ''),
+              desc: decodeHtmlEntities(tool.desc || ''),
+            }));
+          }
         }
       }
+    } catch (err) {
+      console.warn(`PHP scanner attempt on ${url} skipped:`, err);
     }
-  } catch (err) {
-    console.warn("Live PHP scanner notice:", err);
   }
   return [];
 }

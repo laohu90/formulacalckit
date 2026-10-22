@@ -768,11 +768,18 @@ export function resolveDynamicToolMetadata(
       ? site.formula
       : item.formula;
 
+    const effectiveTitle = lang === 'zh'
+      ? ((customTitle && /[\u4e00-\u9fa5]/.test(customTitle)) ? customTitle : item.titleZh)
+      : (customTitle || item.titleEn);
+    const effectiveDesc = lang === 'zh'
+      ? ((customDesc && /[\u4e00-\u9fa5]/.test(customDesc)) ? customDesc : item.descZh)
+      : (customDesc || item.descEn);
+
     return {
-      title: customTitle || (lang === 'zh' ? item.titleZh : item.titleEn),
+      title: effectiveTitle,
       formula: formatFormulaDisplay(formulaRaw),
       category: customCategory || (lang === 'zh' ? item.categoryZh : item.categoryEn),
-      desc: customDesc || (lang === 'zh' ? item.descZh : item.descEn),
+      desc: effectiveDesc,
       icon: customIcon || item.icon,
       quickSolverId: item.quickSolverId,
       tags: item.tags,
@@ -786,10 +793,17 @@ export function resolveDynamicToolMetadata(
     if (rule.test(slug)) {
       const meta = rule.metadata(lang);
       const formulaRaw = site.formula && site.formula.trim().length > 0 ? site.formula : meta.formula;
+      const effectiveTitle = lang === 'zh'
+        ? ((customTitle && /[\u4e00-\u9fa5]/.test(customTitle)) ? customTitle : meta.title)
+        : (customTitle || meta.title);
+      const effectiveDesc = lang === 'zh'
+        ? ((customDesc && /[\u4e00-\u9fa5]/.test(customDesc)) ? customDesc : meta.desc)
+        : (customDesc || meta.desc);
+
       return {
         ...meta,
-        title: customTitle || meta.title,
-        desc: customDesc || meta.desc,
+        title: effectiveTitle,
+        desc: effectiveDesc,
         formula: formatFormulaDisplay(formulaRaw),
         category: customCategory || meta.category,
         icon: customIcon || meta.icon,
