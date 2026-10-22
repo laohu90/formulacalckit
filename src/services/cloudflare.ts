@@ -198,38 +198,22 @@ export async function fetchWorkerDnsTools(): Promise<{
     }),
   ]);
 
-  // 1. Process Cloudflare DNS tools first (Base known DNS subdomains)
-  if (workerResult.status === 'fulfilled' && workerResult.value) {
-    hasWorkerSuccess = true;
-    for (const tool of workerResult.value) {
+  // 2. If PHP server tools are successfully fetched, they represent the absolute live state of the server!
+  if (phpResult.status === 'fulfilled' && phpResult.value && phpResult.value.length > 0) {
+    hasPhpSuccess = true;
+    for (const tool of phpResult.value) {
       if (tool && tool.subdomain) {
         const key = tool.subdomain.toLowerCase().trim();
         mergedMap.set(key, tool);
       }
     }
-  }
-
-  // 2. Merge PHP server tools (Live scanned from /var/www/sites on user server)
-  if (phpResult.status === 'fulfilled' && phpResult.value) {
-    hasPhpSuccess = true;
-    for (const tool of phpResult.value) {
+  } else if (workerResult.status === 'fulfilled' && workerResult.value) {
+    // Fallback to Cloudflare worker if PHP didn't return tools
+    hasWorkerSuccess = true;
+    for (const tool of workerResult.value) {
       if (tool && tool.subdomain) {
         const key = tool.subdomain.toLowerCase().trim();
-        const existing = mergedMap.get(key);
-        if (existing) {
-          // If already in DNS, preserve DNS URL and supplement with live title/desc if provided
-          mergedMap.set(key, {
-            ...existing,
-            title: tool.title && tool.title !== tool.subdomain ? tool.title : existing.title,
-            desc: tool.desc && tool.desc.length > 5 ? tool.desc : existing.desc,
-            formula: tool.formula || existing.formula,
-            category: tool.category || existing.category,
-            icon: tool.icon || existing.icon,
-          });
-        } else {
-          // New dynamic wildcard tool discovered on the server!
-          mergedMap.set(key, tool);
-        }
+        mergedMap.set(key, tool);
       }
     }
   }
