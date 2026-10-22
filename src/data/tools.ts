@@ -7,7 +7,7 @@ export const INITIAL_TOOLS: ToolItem[] = [
     nameEn: 'Completing the Square Calculator',
     nameZh: '配方法一元二次方程计算器',
     category: 'algebra',
-    formula: 'a(x - h)^2 + k = 0',
+    formula: 'a(x - h)² + k = 0',
     descriptionEn:
       'Comprehensive step-by-step Completing the Square calculator, quadratic equation solver, vertex form converter, and geometric algebra tile visualization.',
     descriptionZh:
@@ -248,7 +248,7 @@ export const INITIAL_TOOLS: ToolItem[] = [
     nameEn: 'Pythagorean Theorem Calculator',
     nameZh: '勾股定理计算器 (直角三角形斜边求解)',
     category: 'geometry',
-    formula: 'a^2 + b^2 = c^2',
+    formula: 'a² + b² = c²',
     descriptionEn:
       'Calculate missing hypotenuse or legs with exact radical simplification, step-by-step mathematical proofs, and triples table.',
     descriptionZh:
@@ -512,7 +512,7 @@ export const INITIAL_TOOLS: ToolItem[] = [
     nameEn: 'Compound Interest Calculator',
     nameZh: '复利收益与终值计算器',
     category: 'finance',
-    formula: 'A = P(1 + r/n)^{nt}',
+    formula: 'A = P(1 + r/n)ⁿᵗ',
     descriptionEn:
       'Forecast long-term investment growth, compounding frequencies (daily, monthly, annually), and interest accumulated over time.',
     descriptionZh:

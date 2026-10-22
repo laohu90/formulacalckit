@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ToolItem, ToolCategory, QuickSolverId } from '../types';
+import { formatFormulaDisplay } from '../utils/subdomainResolver';
 import {
   Search,
   ExternalLink,
@@ -207,7 +208,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({
 
                 <div className="my-2.5">
                   <span className="inline-block px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-md font-mono text-xs text-slate-700 font-semibold tracking-tight">
-                    {tool.formula}
+                    {formatFormulaDisplay(tool.formula)}
                   </span>
                 </div>
 
