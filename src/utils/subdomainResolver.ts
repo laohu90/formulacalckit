@@ -199,6 +199,19 @@ export const EXACT_TOOL_REGISTRY: Record<string, {
     tags: ['扇形面积', '弧长计算器', '圆心角', '扇形公式', '圆锥侧面积', '初中几何', 'sector area', 'arc length', 'geometry'],
   },
 
+  // 14. Math Comprehensive Suite (from wildcard server)
+  'math': {
+    titleZh: '数学综合计算与公式工具箱',
+    titleEn: 'Comprehensive Mathematics Suite',
+    formula: 'f(x) = \\int g(x)\\,dx',
+    categoryZh: '通用数学',
+    categoryEn: 'Mathematics',
+    descZh: '全功能数学公式综合求解与推导平台，涵盖基础代数、微积分、几何定理与高精度科学计算。',
+    descEn: 'Comprehensive math and scientific formula platform supporting algebra, calculus, geometry, and high-precision computing.',
+    icon: '🧮',
+    tags: ['数学综合', '公式计算器', '代数', '几何', '微积分', 'math', 'algebra', 'calculus'],
+  },
+
   // Additional registered tools for future subdomains
   'circle-calculator': {
     titleZh: '圆与球体几何计算器',

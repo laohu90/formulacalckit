@@ -16,6 +16,12 @@ import {
 export const WORKER_DNS_API_URL =
   'https://formulacalckit-dns-api.cloudflare-1-268.workers.dev/';
 
+/**
+ * Live PHP Server Subdirectory Scanner Endpoint
+ * Hosted on user's wildcard server: https://tools.formulacalckit.com/
+ */
+export const SERVER_PHP_API_URL = 'https://tools.formulacalckit.com/';
+
 export const DEFAULT_DNS_CONFIG: DnsConfig = {
   authMode: 'token',
   apiToken: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_CLOUDFLARE_API_TOKEN) || '',
@@ -146,40 +152,112 @@ export const FALLBACK_WORKER_TOOLS: WorkerSubsiteTool[] = [
   },
 ];
 
+
 /**
- * Fetch live active subdomains from the Cloudflare Worker DNS API
- * Automatically reflects new sites added or removed from Cloudflare DNS!
+ * Fetch live active subdomains using Dual-Source Hybrid Discovery:
+ * 1. Queries https://tools.formulacalckit.com/ (Live PHP server directory scan)
+ * 2. Queries https://formulacalckit-dns-api.cloudflare-1-268.workers.dev/ (Cloudflare DNS records)
+ * 3. Intelligently merges and deduplicates tools by subdomain
+ * 4. Caches to localStorage with graceful fallback
  */
 export async function fetchWorkerDnsTools(): Promise<{
   success: boolean;
   tools: WorkerSubsiteTool[];
   count: number;
-  source: 'worker' | 'cache' | 'fallback';
+  source: 'hybrid' | 'php-server' | 'worker' | 'cache' | 'fallback';
 }> {
-  try {
-    const res = await fetch(WORKER_DNS_API_URL, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
+  const mergedMap = new Map<string, WorkerSubsiteTool>();
+  let hasPhpSuccess = false;
+  let hasWorkerSuccess = false;
 
-    if (res.ok) {
-      const data: WorkerApiResponse = await res.json();
-      if (data && data.success && Array.isArray(data.tools)) {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('fck_worker_tools_cache', JSON.stringify(data.tools));
+  // Concurrently request both the PHP live scanner and the Cloudflare DNS worker
+  const [phpResult, workerResult] = await Promise.allSettled([
+    fetch(SERVER_PHP_API_URL, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    }).then(async (res) => {
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.tools)) {
+          return data.tools as WorkerSubsiteTool[];
         }
-        return {
-          success: true,
-          tools: data.tools,
-          count: data.count || data.tools.length,
-          source: 'worker',
-        };
+      }
+      return null;
+    }),
+    fetch(WORKER_DNS_API_URL, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    }).then(async (res) => {
+      if (res.ok) {
+        const data: WorkerApiResponse = await res.json();
+        if (data && data.success && Array.isArray(data.tools)) {
+          return data.tools;
+        }
+      }
+      return null;
+    }),
+  ]);
+
+  // 1. Process Cloudflare DNS tools first (Base known DNS subdomains)
+  if (workerResult.status === 'fulfilled' && workerResult.value) {
+    hasWorkerSuccess = true;
+    for (const tool of workerResult.value) {
+      if (tool && tool.subdomain) {
+        const key = tool.subdomain.toLowerCase().trim();
+        mergedMap.set(key, tool);
       }
     }
-  } catch (err) {
-    console.warn('Worker DNS API request failed, reading cache fallback:', err);
+  }
+
+  // 2. Merge PHP server tools (Live scanned from /var/www/sites on user server)
+  if (phpResult.status === 'fulfilled' && phpResult.value) {
+    hasPhpSuccess = true;
+    for (const tool of phpResult.value) {
+      if (tool && tool.subdomain) {
+        const key = tool.subdomain.toLowerCase().trim();
+        const existing = mergedMap.get(key);
+        if (existing) {
+          // If already in DNS, preserve DNS URL and supplement with live title/desc if provided
+          mergedMap.set(key, {
+            ...existing,
+            title: tool.title && tool.title !== tool.subdomain ? tool.title : existing.title,
+            desc: tool.desc && tool.desc.length > 5 ? tool.desc : existing.desc,
+            formula: tool.formula || existing.formula,
+            category: tool.category || existing.category,
+            icon: tool.icon || existing.icon,
+          });
+        } else {
+          // New dynamic wildcard tool discovered on the server!
+          mergedMap.set(key, tool);
+        }
+      }
+    }
+  }
+
+  // If at least one online source returned tools
+  if (mergedMap.size > 0) {
+    const finalTools = Array.from(mergedMap.values());
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('fck_worker_tools_cache', JSON.stringify(finalTools));
+      } catch {
+        // ignore
+      }
+    }
+
+    const source: 'hybrid' | 'php-server' | 'worker' =
+      hasPhpSuccess && hasWorkerSuccess
+        ? 'hybrid'
+        : hasPhpSuccess
+        ? 'php-server'
+        : 'worker';
+
+    return {
+      success: true,
+      tools: finalTools,
+      count: finalTools.length,
+      source,
+    };
   }
 
   // Fallback to localStorage cache

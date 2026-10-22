@@ -37,6 +37,7 @@ export interface WorkerSubsiteTool {
   url: string;
   title: string;
   desc: string;
+  formula?: string;
   icon?: string;
   category?: string;
 }
