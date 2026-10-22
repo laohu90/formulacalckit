@@ -35,10 +35,12 @@ export interface WorkerSubsiteTool {
   subdomain: string;
   domain: string;
   url: string;
+  pathUrl?: string;
   title: string;
   desc: string;
   icon?: string;
   category?: string;
+  formula?: string;
 }
 
 export interface WorkerApiResponse {

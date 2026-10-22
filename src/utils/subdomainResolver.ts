@@ -612,8 +612,16 @@ export function resolveDynamicToolMetadata(
   lang: 'en' | 'zh'
 ): ResolvedToolMetadata {
   const rawSub = (site.subdomain || '').toLowerCase().trim();
-  // Strip potential domain parts if passed as full hostname
   const slug = rawSub.replace(/\.formulacalckit\.com$/, '').replace(/^https?:\/\//, '').trim();
+
+  // Check if site came with a real custom title from HTML <title>
+  const isDummyTitle = !site.title ||
+    site.title.toLowerCase() === slug ||
+    site.title.toLowerCase() === rawSub ||
+    site.title.toLowerCase() === (slug + ' calculator') ||
+    site.title.toUpperCase() === slug.toUpperCase();
+
+  const customTitle = (!isDummyTitle && site.title.length > 2) ? site.title.trim() : null;
 
   // ----------------------------------------------------
   // TIER 1: Exact Registry Match (Highest Precision)
@@ -621,11 +629,11 @@ export function resolveDynamicToolMetadata(
   if (EXACT_TOOL_REGISTRY[slug]) {
     const item = EXACT_TOOL_REGISTRY[slug];
     return {
-      title: lang === 'zh' ? item.titleZh : item.titleEn,
-      formula: item.formula,
-      category: lang === 'zh' ? item.categoryZh : item.categoryEn,
-      desc: lang === 'zh' ? item.descZh : item.descEn,
-      icon: item.icon,
+      title: customTitle || (lang === 'zh' ? item.titleZh : item.titleEn),
+      formula: site.formula || item.formula,
+      category: site.category || (lang === 'zh' ? item.categoryZh : item.categoryEn),
+      desc: site.desc && site.desc.length > 5 ? site.desc : (lang === 'zh' ? item.descZh : item.descEn),
+      icon: site.icon || item.icon,
       quickSolverId: item.quickSolverId,
       tags: item.tags,
     };
@@ -634,25 +642,30 @@ export function resolveDynamicToolMetadata(
   // ----------------------------------------------------
   // TIER 2: Specificity-Ranked Rule Matching
   // ----------------------------------------------------
-  // Rules are evaluated in descending order of specificity (already sorted)
   for (const rule of SPECIFICITY_RULES) {
     if (rule.test(slug)) {
-      return rule.metadata(lang);
+      const meta = rule.metadata(lang);
+      return {
+        ...meta,
+        title: customTitle || meta.title,
+        desc: site.desc && site.desc.length > 5 ? site.desc : meta.desc,
+        formula: site.formula || meta.formula,
+        category: site.category || meta.category,
+        icon: site.icon || meta.icon,
+      };
     }
   }
 
   // ----------------------------------------------------
-  // TIER 3: Intelligent Semantic Fallback for Future Subdomains
+  // TIER 3: Intelligent Semantic Fallback for Future Subdomains & User Sites
   // ----------------------------------------------------
   const rawTokens = slug.split(/[-_]+/).filter(Boolean);
-  // Filter out generic filler words
   const cleanTokens = rawTokens.filter(
     (t) => !['calculator', 'solver', 'tool', 'tools', 'online', 'kit', 'app', 'calc'].includes(t)
   );
 
   const translatedZhTokens: string[] = [];
   const capitalizedEnTokens: string[] = [];
-
   for (const token of cleanTokens) {
     capitalizedEnTokens.push(token.charAt(0).toUpperCase() + token.slice(1));
     if (MATH_TERM_DICTIONARY[token]) {
@@ -661,10 +674,10 @@ export function resolveDynamicToolMetadata(
   }
 
   // Determine Category, Formula, and Icon based on semantic cues
-  let inferredCategoryZh = '通用数学与科学';
-  let inferredCategoryEn = 'Mathematics';
-  let inferredFormula = 'f(x) = y';
-  let inferredIcon = '🧮';
+  let inferredCategoryZh = '实用与在线工具';
+  let inferredCategoryEn = 'Utility & Tools';
+  let inferredFormula = '';
+  let inferredIcon = '🌐';
 
   if (slug.includes('geo') || slug.includes('triangle') || slug.includes('polygon') || slug.includes('circle') || slug.includes('area') || slug.includes('perimeter')) {
     inferredCategoryZh = '几何与图形';
@@ -691,30 +704,32 @@ export function resolveDynamicToolMetadata(
     inferredCategoryEn = 'Statistics';
     inferredFormula = 'P(A|B) = \\frac{P(B|A)P(A)}{P(B)}';
     inferredIcon = '📊';
+  } else if (slug.includes('rest') || slug.includes('stop') || slug.includes('map') || slug.includes('nav') || slug.includes('traffic') || slug.includes('road')) {
+    inferredCategoryZh = '路线与便民导航';
+    inferredCategoryEn = 'Navigation & Transit';
+    inferredIcon = '🚗';
   }
 
-  // Construct readable titles
-  const enName = capitalizedEnTokens.length > 0 ? `${capitalizedEnTokens.join(' ')} Calculator` : `${slug} Calculator`;
+  // Construct readable titles if no custom title was provided
+  const enName = capitalizedEnTokens.length > 0 ? `${capitalizedEnTokens.join(' ')} Calculator` : `${slug} Tool`;
   const zhKeywords = translatedZhTokens.length > 0 ? translatedZhTokens.join('') : cleanTokens.map((t) => t.toUpperCase()).join(' ');
-  const zhName = `${zhKeywords}在线计算器`;
+  const zhName = zhKeywords ? `${zhKeywords}在线工具` : `${slug} 在线工具`;
 
   // Filter out dummy/stub descriptions from worker (e.g. "Scientific Calculation Tool")
   const isStubDesc = !site.desc || site.desc.toLowerCase().includes('scientific calculation tool') || site.desc.length < 5;
-
   const descZh = isStubDesc
-    ? `专业在线${zhKeywords}计算工具，支持参数即时输入、高精度数值运算与详细分步公式解析。`
+    ? `专业在线${zhKeywords || slug}工具，提供即时数据交互与便捷功能支持。`
     : site.desc;
-
   const descEn = isStubDesc
-    ? `Professional online ${enName} supporting instant calculation, exact results, and step-by-step formula analysis.`
+    ? `Online ${enName} providing instant calculations and reliable web tools.`
     : site.desc;
 
   return {
-    title: lang === 'zh' ? zhName : enName,
-    formula: inferredFormula,
-    category: lang === 'zh' ? inferredCategoryZh : inferredCategoryEn,
-    desc: lang === 'zh' ? descZh : descEn,
-    icon: inferredIcon,
+    title: customTitle || (lang === 'zh' ? zhName : enName),
+    formula: site.formula || inferredFormula,
+    category: site.category || (lang === 'zh' ? inferredCategoryZh : inferredCategoryEn),
+    desc: site.desc && site.desc.length > 5 ? site.desc : (lang === 'zh' ? descZh : descEn),
+    icon: site.icon || inferredIcon,
     tags: cleanTokens,
   };
 }

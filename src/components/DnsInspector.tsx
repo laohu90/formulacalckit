@@ -189,12 +189,14 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
                   </div>
                 </div>
 
-                <div>
-                  <span className="inline-block px-2 py-0.5 bg-slate-50 border border-slate-200 rounded-md font-mono text-xs font-semibold text-slate-700">
-                    {formula}
-                  </span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {formula ? (
+                    <span className="inline-block px-2 py-0.5 bg-slate-50 border border-slate-200 rounded-md font-mono text-xs font-semibold text-slate-700">
+                      {formula}
+                    </span>
+                  ) : null}
                   {displayCategory && (
-                    <span className="ml-2 inline-block px-1.5 py-0.5 bg-blue-50 border border-blue-100 text-[10px] font-medium text-blue-600 rounded">
+                    <span className="inline-block px-1.5 py-0.5 bg-blue-50 border border-blue-100 text-[10px] font-medium text-blue-600 rounded">
                       {displayCategory}
                     </span>
                   )}

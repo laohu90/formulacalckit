@@ -150,63 +150,169 @@ export const FALLBACK_WORKER_TOOLS: WorkerSubsiteTool[] = [
  * Fetch live active subdomains from the Cloudflare Worker DNS API
  * Automatically reflects new sites added or removed from Cloudflare DNS!
  */
+export const LIVE_PHP_SCANNER_URL =
+  typeof window !== "undefined" && window.location.origin.includes("formulacalckit.com")
+    ? "/tools.php"
+    : "https://formulacalckit.com/tools.php";
+
+/**
+ * Safely fetch live tools from server tools.php scanner with timeout & content-type protection
+ */
+async function fetchPhpServerTools(): Promise<WorkerSubsiteTool[]> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(LIVE_PHP_SCANNER_URL, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+
+    if (res.ok) {
+      const text = await res.text();
+      // Guard against HTML rewrites from single page application hosts
+      if (text.trim().startsWith("{") || text.trim().startsWith("[")) {
+        const data = JSON.parse(text);
+        if (data && data.success && Array.isArray(data.tools)) {
+          return data.tools;
+        } else if (Array.isArray(data)) {
+          return data;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Live PHP scanner notice:", err);
+  }
+  return [];
+}
+
+/**
+ * Fetch live active subdomains with True Lossless Dual-Scanning:
+ * 1. Cloudflare DNS Worker records (active DNS-routed tools)
+ * 2. Real-time PHP directory scanner (/tools.php on user server)
+ * Performs attribute deep-merge so live HTML titles/descriptions enrich DNS tools,
+ * and newly deployed directory sites appear seamlessly alongside DNS tools.
+ */
 export async function fetchWorkerDnsTools(): Promise<{
   success: boolean;
   tools: WorkerSubsiteTool[];
   count: number;
-  source: 'worker' | 'cache' | 'fallback';
+  source: "worker" | "hybrid" | "cache" | "fallback";
 }> {
-  try {
-    const res = await fetch(WORKER_DNS_API_URL, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
+  let workerTools: WorkerSubsiteTool[] = [];
+  let phpTools: WorkerSubsiteTool[] = [];
+  let isWorkerSuccess = false;
+  let isPhpSuccess = false;
 
-    if (res.ok) {
-      const data: WorkerApiResponse = await res.json();
-      if (data && data.success && Array.isArray(data.tools)) {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('fck_worker_tools_cache', JSON.stringify(data.tools));
-        }
-        return {
-          success: true,
-          tools: data.tools,
-          count: data.count || data.tools.length,
-          source: 'worker',
-        };
+  // Run both pipelines concurrently
+  const [workerRes, phpRes] = await Promise.allSettled([
+    fetch(WORKER_DNS_API_URL, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    }).then(async (r) => {
+      if (r.ok) {
+        const d: WorkerApiResponse = await r.json();
+        if (d && d.success && Array.isArray(d.tools)) return d.tools;
       }
-    }
-  } catch (err) {
-    console.warn('Worker DNS API request failed, reading cache fallback:', err);
+      return [];
+    }),
+    fetchPhpServerTools(),
+  ]);
+
+  if (workerRes.status === "fulfilled" && workerRes.value && workerRes.value.length > 0) {
+    workerTools = workerRes.value;
+    isWorkerSuccess = true;
   }
 
-  // Fallback to localStorage cache
-  if (typeof window !== 'undefined') {
-    const cached = localStorage.getItem('fck_worker_tools_cache');
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return {
-            success: true,
-            tools: parsed,
-            count: parsed.length,
-            source: 'cache',
-          };
-        }
-      } catch {
-        // ignore
+  if (phpRes.status === "fulfilled" && phpRes.value && phpRes.value.length > 0) {
+    phpTools = phpRes.value;
+    isPhpSuccess = true;
+  }
+
+  // Fallback to cache/seed if both failed
+  if (!isWorkerSuccess && !isPhpSuccess) {
+    if (typeof window !== "undefined") {
+      const cached = localStorage.getItem("fck_worker_tools_cache");
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return {
+              success: true,
+              tools: parsed,
+              count: parsed.length,
+              source: "cache",
+            };
+          }
+        } catch {}
       }
     }
+    return {
+      success: true,
+      tools: FALLBACK_WORKER_TOOLS,
+      count: FALLBACK_WORKER_TOOLS.length,
+      source: "fallback",
+    };
+  }
+
+  // True Lossless Dual-Scan Merge
+  const mergedMap = new Map<string, WorkerSubsiteTool>();
+
+  // 1. Populate base tools from Cloudflare DNS (or fallback)
+  const baseTools = isWorkerSuccess ? workerTools : FALLBACK_WORKER_TOOLS;
+  for (const tool of baseTools) {
+    if (tool && tool.subdomain) {
+      const slug = tool.subdomain.toLowerCase().trim();
+      mergedMap.set(slug, { ...tool });
+    }
+  }
+
+  // 2. Seamlessly merge PHP tools
+  for (const phpTool of phpTools) {
+    if (!phpTool || !phpTool.subdomain) continue;
+    const slug = phpTool.subdomain.toLowerCase().trim();
+    const existing = mergedMap.get(slug);
+
+    if (existing) {
+      // Retain verified DNS routing & math solvers, update live title/desc if scanned from real HTML
+      mergedMap.set(slug, {
+        ...existing,
+        title: phpTool.title && phpTool.title !== phpTool.subdomain && phpTool.title.length > 2
+          ? phpTool.title
+          : existing.title,
+        desc: phpTool.desc && phpTool.desc.length > 5
+          ? phpTool.desc
+          : existing.desc,
+        formula: phpTool.formula || existing.formula,
+        category: phpTool.category || existing.category,
+        icon: phpTool.icon || existing.icon,
+        url: phpTool.url || existing.url,
+        pathUrl: phpTool.pathUrl || existing.pathUrl,
+      });
+    } else {
+      // Newly discovered standalone subsite or tool on user server!
+      mergedMap.set(slug, {
+        ...phpTool,
+        domain: phpTool.domain || (slug + ".formulacalckit.com"),
+        url: phpTool.url || ("https://" + slug + ".formulacalckit.com/"),
+      });
+    }
+  }
+
+  const finalTools = Array.from(mergedMap.values());
+
+  if (typeof window !== "undefined" && finalTools.length > 0) {
+    try {
+      localStorage.setItem("fck_worker_tools_cache", JSON.stringify(finalTools));
+    } catch {}
   }
 
   return {
     success: true,
-    tools: FALLBACK_WORKER_TOOLS,
-    count: FALLBACK_WORKER_TOOLS.length,
-    source: 'fallback',
+    tools: finalTools,
+    count: finalTools.length,
+    source: isWorkerSuccess && isPhpSuccess ? "hybrid" : (isWorkerSuccess ? "worker" : "hybrid"),
   };
 }
 
