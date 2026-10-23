@@ -1,7 +1,6 @@
 {
-  "name": "FormulaCalcKit 公式工具箱",
-  "description": "专业免费的科学与数学公式计算工具箱，涵盖几何定理、代数方程、物理定律与LaTeX排版，支持最简二次根式化简与分步解答。",
+  "name": "FormulaCalcKit - Precision Formula & Scientific Calculator Hub",
+  "description": "High-precision scientific and mathematical formula computing workstation featuring interactive step-by-step solvers, radical simplifications, and comprehensive STEM formula directory.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
-

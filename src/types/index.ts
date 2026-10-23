@@ -4,8 +4,22 @@ export type ToolCategory =
   | 'algebra'
   | 'trigonometry'
   | 'physics'
+  | 'arithmetic'
   | 'finance'
   | 'academic';
+
+export type QuickSolverId =
+  | 'pythagorean'
+  | 'quadratic'
+  | 'gcd_lcm'
+  | 'linear_system'
+  | 'circle'
+  | 'trigonometry'
+  | 'ohms_law'
+  | 'density'
+  | 'kinematics'
+  | 'percentage'
+  | 'mathbridge';
 
 export interface ToolItem {
   id: string;
@@ -22,14 +36,6 @@ export interface ToolItem {
   isVerifiedSubdomain?: boolean;
   dnsRecordName?: string;
 }
-
-export type QuickSolverId =
-  | 'pythagorean'
-  | 'quadratic'
-  | 'circle'
-  | 'trigonometry'
-  | 'ohms_law'
-  | 'percentage';
 
 export interface WorkerSubsiteTool {
   subdomain: string;
@@ -76,4 +82,21 @@ export interface DnsConfig {
   authKey: string;
   zoneId: string;
   rootDomain: string;
+}
+
+export interface FormulaEntry {
+  id: string;
+  titleEn: string;
+  titleZh: string;
+  categoryEn: string;
+  categoryZh: string;
+  categoryKey: ToolCategory;
+  formula: string;
+  formulaLatex: string;
+  descEn: string;
+  descZh: string;
+  variables: Array<{ sym: string; nameEn: string; nameZh: string }>;
+  exampleEn: string;
+  exampleZh: string;
+  quickSolverId?: QuickSolverId;
 }

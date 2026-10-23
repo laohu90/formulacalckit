@@ -1,24 +1,24 @@
-import { SupportedLang, resolveInitialLanguage } from './i18n/translations';
 import React, { useState, useEffect } from 'react';
+import { SupportedLang, resolveInitialLanguage } from './i18n/translations';
 import { INITIAL_TOOLS } from './data/tools';
-import { QuickSolverId } from './types';
+import { QuickSolverId, ToolItem, WorkerSubsiteTool } from './types';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { SearchBar } from './components/SearchBar';
-import { DnsInspector } from './components/DnsInspector';
-import { ToolGrid } from './components/ToolGrid';
+import { Workstation } from './components/Workstation';
+import { ToolDirectory } from './components/ToolDirectory';
 import { FormulaCheatSheet } from './components/FormulaCheatSheet';
-import { QuickSolversModal } from './components/QuickSolversModal';
+import { CloudSyncDrawer } from './components/CloudSyncDrawer';
 import { Footer } from './components/Footer';
 
 export function App() {
-  // Intelligent language detection: URL query param -> LocalStorage -> Browser locale -> fallback 'zh'
+  // Intelligent bilingual language state
   const [langState, setLangState] = useState<{ currentLang: SupportedLang; isAuto: boolean }>(() => {
     const init = resolveInitialLanguage();
     return { currentLang: init.lang, isAuto: init.isAuto };
   });
+
   const lang = (langState.currentLang === 'zh' ? 'zh' : 'en') as 'en' | 'zh';
-  const isAuto = langState.isAuto;
+
   const setLang = (newLang: 'en' | 'zh') => {
     setLangState({ currentLang: newLang, isAuto: false });
     try {
@@ -30,56 +30,51 @@ export function App() {
     window.history.pushState({}, '', url.toString());
   };
 
-  // Global search query synchronized between SearchBar and ToolGrid
+  const handleToggleLang = () => {
+    const nextLang = lang === 'en' ? 'zh' : 'en';
+    setLang(nextLang);
+  };
+
+  // Active workstation solver
+  const [activeSolverId, setActiveSolverId] = useState<QuickSolverId>('pythagorean');
+
+  // Global search query
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Quick solver modal state
-  const [activeSolver, setActiveSolver] = useState<{
-    id: QuickSolverId | null;
-    subdomainUrl?: string;
-  }>({ id: null });
+  // Cloudflare sync drawer state
+  const [isCloudSyncOpen, setIsCloudSyncOpen] = useState(false);
 
-  // Discovered subdomains from Cloudflare DNS
+  // Tools list and discovered subdomains
+  const [toolsList, setToolsList] = useState<ToolItem[]>(INITIAL_TOOLS);
   const [discoveredSubdomains, setDiscoveredSubdomains] = useState<string[]>([
     'pythagorean-calculator.formulacalckit.com',
     'quadratic.formulacalckit.com',
     'mathbridge.formulacalckit.com',
   ]);
 
-  // Synchronize document attributes, titles, and SEO meta descriptions on language switch
+  // Synchronize document attributes and SEO metadata on language switch
   useEffect(() => {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-
     if (lang === 'zh') {
-      document.title = 'FormulaCalcKit - 科学公式计算工具箱 | 在线数学物理工程求解器';
+      document.title = 'FormulaCalcKit - 科学公式计算工作台 | 在线数学物理工程求解器';
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
         metaDesc.setAttribute(
           'content',
-          '简洁高效的科学与数学公式计算工具箱。提供勾股定理、一元二次方程、圆与球体、三角函数、欧姆定律、复利与LaTeX公式排版等在线计算工具。'
+          '简洁高效的科学与数学公式计算工作台。提供勾股定理、一元二次方程、圆与球体、三角函数、欧姆定律、复利与LaTeX公式排版等在线计算工具。'
         );
       }
     } else {
-      document.title = 'FormulaCalcKit - Precision Formula Solvers & Scientific Tools Hub';
+      document.title = 'FormulaCalcKit - Precision Formula Solvers & Scientific Problem-Solving Studio';
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
         metaDesc.setAttribute(
           'content',
-          'FormulaCalcKit provides high-precision instant formula calculators for geometry, algebra, trigonometry, physics, finance, and LaTeX typography.'
+          'FormulaCalcKit provides high-precision instant formula calculators for geometry, quadratic algebra, trigonometry, physics, and LaTeX typography.'
         );
       }
     }
   }, [lang]);
-
-  // Persist language choice
-  const handleToggleLang = () => {
-    const nextLang = lang === 'en' ? 'zh' : 'en';
-    setLang(nextLang);
-    localStorage.setItem('fck_lang', nextLang);
-    const url = new URL(window.location.href);
-    url.searchParams.set('lang', nextLang);
-    window.history.replaceState({}, '', url.toString());
-  };
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -88,99 +83,55 @@ export function App() {
     }
   };
 
-  const handleOpenQuickSolver = (solverId: QuickSolverId, subdomainUrl?: string) => {
-    setActiveSolver({ id: solverId, subdomainUrl });
-  };
-
-  const handleCloseQuickSolver = () => {
-    setActiveSolver({ id: null });
-  };
-
-  const handleSyncSubdomains = (subdomainList: string[]) => {
-    setDiscoveredSubdomains((prev) => {
-      const merged = Array.from(new Set([...prev, ...subdomainList]));
-      return merged;
-    });
+  const handleSyncTools = (workerTools: WorkerSubsiteTool[]) => {
+    setDiscoveredSubdomains(workerTools.map((t) => t.domain));
   };
 
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
-      {/* Sticky Top Header */}
+      {/* 1-Row 3-Zone Top Navigation Bar */}
       <Header
         lang={lang}
         onToggleLang={handleToggleLang}
+        onOpenCloudSync={() => setIsCloudSyncOpen(true)}
         onScrollToSection={scrollToSection}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-12 w-full">
-        {/* Unified Hero & Search Command Suite */}
-        <section className="relative rounded-3xl bg-gradient-to-b from-blue-50/70 via-slate-50/30 to-white border border-slate-200/80 px-4 sm:px-8 pt-8 pb-7 shadow-xs overflow-hidden">
-          {/* Subtle Ambient Decorative Glows */}
-          <div className="absolute -top-24 -left-24 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -top-24 -right-24 w-72 h-72 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none" />
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16 w-full">
+        {/* Clean, authoritative Hero highlighting Formula Problem Solving */}
+        <Hero lang={lang} onSelectSolver={setActiveSolverId} />
 
-          {/* Hero Header & Title */}
-          <Hero lang={lang} />
-
-          {/* Intelligent Bilingual Instant Search Bar */}
-          <SearchBar
-            lang={lang}
-            tools={INITIAL_TOOLS}
-            onOpenQuickSolver={handleOpenQuickSolver}
-            onSearchChange={setSearchQuery}
-            currentQuery={searchQuery}
-          />
-
-          {/* Clean Quality Guarantees / Platform Highlights Bar */}
-          <div className="mt-6 pt-5 border-t border-slate-200/70 max-w-2xl mx-auto flex items-center justify-center gap-4 sm:gap-8 text-[11px] font-medium text-slate-500 flex-wrap">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>{lang === 'en' ? '100% Client-Side Computing' : '100% 浏览器本地运算 · 零隐私追踪'}</span>
-            </span>
-            <span className="hidden sm:inline text-slate-300">|</span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-              <span>{lang === 'en' ? 'Exact Radical & Step Solutions' : '最简二次根式化简与分步解答'}</span>
-            </span>
-            <span className="hidden sm:inline text-slate-300">|</span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-              <span>{lang === 'en' ? 'High-Precision Math Engine' : '双向中英文 · 高精度科学算法'}</span>
-            </span>
-          </div>
-        </section>
-
-        {/* Featured Online Tools (Synchronized from Cloudflare Worker) */}
-        <DnsInspector
+        {/* Flagship Centerpiece: The Interactive Formula Workstation */}
+        <Workstation
           lang={lang}
-          onSyncSubdomains={handleSyncSubdomains}
-          onOpenQuickSolver={handleOpenQuickSolver}
+          activeSolverId={activeSolverId}
+          onSelectSolver={setActiveSolverId}
         />
 
-        {/* Comprehensive Formula Calculators Directory (Synced with Search) */}
-        <ToolGrid
-          tools={INITIAL_TOOLS}
+        {/* Unified, Non-Duplicated Formula Directory */}
+        <ToolDirectory
+          tools={toolsList}
           lang={lang}
-          onOpenQuickSolver={handleOpenQuickSolver}
+          onSelectSolver={setActiveSolverId}
           discoveredSubdomains={discoveredSubdomains}
-          externalSearchQuery={searchQuery}
+          searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
         />
 
-        {/* Structured Formula Cheat Sheet & Reference (SEO Content Depth) */}
-        <FormulaCheatSheet lang={lang} />
+        {/* Comprehensive Formula Reference & Mathematical Cheat Sheet */}
+        <FormulaCheatSheet lang={lang} onSelectSolver={setActiveSolverId} />
       </main>
 
-      {/* Global Interactive Quick Solver Modal */}
-      <QuickSolversModal
-        solverId={activeSolver.id}
-        subdomainUrl={activeSolver.subdomainUrl}
-        onClose={handleCloseQuickSolver}
+      {/* Discrete Cloudflare Edge Drawer (Keeps the main page free of DNS clutter) */}
+      <CloudSyncDrawer
+        isOpen={isCloudSyncOpen}
+        onClose={() => setIsCloudSyncOpen(false)}
         lang={lang}
+        onSyncTools={handleSyncTools}
       />
 
-      {/* Production Compliant Footer */}
+      {/* Production-Grade Footer with Legal and Nav Links */}
       <Footer lang={lang} onScrollToSection={scrollToSection} />
     </div>
   );
