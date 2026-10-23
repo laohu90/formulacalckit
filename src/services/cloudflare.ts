@@ -178,7 +178,7 @@ function decodeHtmlEntities(str: string): string {
 /**
  * Safely fetch live tools from server tools.php scanner with timeout & content-type protection
  */
-async function fetchPhpServerTools(): Promise<WorkerSubsiteTool[]> {
+export async function fetchPhpServerTools(): Promise<WorkerSubsiteTool[]> {
   for (const url of PHP_SCANNER_CANDIDATE_URLS) {
     try {
       const controller = new AbortController();

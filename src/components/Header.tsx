@@ -4,14 +4,12 @@ import { Languages, Menu, X, ArrowUpRight } from 'lucide-react';
 interface HeaderProps {
   lang: 'en' | 'zh';
   onToggleLang: () => void;
-  onOpenCloudSync: () => void;
   onScrollToSection: (id: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   lang,
   onToggleLang,
-  onOpenCloudSync,
   onScrollToSection,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -45,22 +43,22 @@ export const Header: React.FC<HeaderProps> = ({
             {lang === 'en' ? 'Workstation' : '计算工作台'}
           </button>
           <button
-            onClick={() => onScrollToSection('directory')}
+            onClick={() => onScrollToSection('cloudflare-tools')}
             className="hover:text-blue-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
-            {lang === 'en' ? 'Tool Directory' : '工具目录'}
+            {lang === 'en' ? 'Cloudflare Tools' : '云端独立子站'}
+          </button>
+          <button
+            onClick={() => onScrollToSection('server-tools')}
+            className="hover:text-blue-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            {lang === 'en' ? 'Server Directory' : '服务器公式目录'}
           </button>
           <button
             onClick={() => onScrollToSection('cheat-sheet')}
             className="hover:text-blue-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
-            {lang === 'en' ? 'Formula Reference' : '公式速查手册'}
-          </button>
-          <button
-            onClick={onOpenCloudSync}
-            className="hover:text-blue-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
-          >
-            <span>{lang === 'en' ? 'Cloud Edge' : '云端子站'}</span>
+            {lang === 'en' ? 'Cheat Sheet' : '公式手册'}
           </button>
         </nav>
 
@@ -105,12 +103,21 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
           <button
             onClick={() => {
-              onScrollToSection('directory');
+              onScrollToSection('cloudflare-tools');
               setMobileMenuOpen(false);
             }}
             className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
           >
-            {lang === 'en' ? 'Tool Directory' : '工具目录'}
+            {lang === 'en' ? 'Cloudflare Tools' : '云端独立子站'}
+          </button>
+          <button
+            onClick={() => {
+              onScrollToSection('server-tools');
+              setMobileMenuOpen(false);
+            }}
+            className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
+          >
+            {lang === 'en' ? 'Server Directory' : '服务器公式目录'}
           </button>
           <button
             onClick={() => {
@@ -119,16 +126,7 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
           >
-            {lang === 'en' ? 'Formula Reference' : '公式速查手册'}
-          </button>
-          <button
-            onClick={() => {
-              onOpenCloudSync();
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-2 text-slate-700 hover:text-blue-600"
-          >
-            {lang === 'en' ? 'Cloud Edge & Subdomains' : '云端子站同步'}
+            {lang === 'en' ? 'Formula Reference Sheet' : '公式速查手册'}
           </button>
         </div>
       )}

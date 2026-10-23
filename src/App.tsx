@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { SupportedLang, resolveInitialLanguage } from './i18n/translations';
 import { INITIAL_TOOLS } from './data/tools';
-import { QuickSolverId, ToolItem, WorkerSubsiteTool } from './types';
+import { QuickSolverId } from './types';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Workstation } from './components/Workstation';
-import { ToolDirectory } from './components/ToolDirectory';
+import { CloudflareToolGrid } from './components/CloudflareToolGrid';
+import { ServerToolGrid } from './components/ServerToolGrid';
 import { FormulaCheatSheet } from './components/FormulaCheatSheet';
-import { CloudSyncDrawer } from './components/CloudSyncDrawer';
 import { Footer } from './components/Footer';
 
 export function App() {
@@ -35,22 +35,11 @@ export function App() {
     setLang(nextLang);
   };
 
-  // Active workstation solver
+  // Active workstation solver tab
   const [activeSolverId, setActiveSolverId] = useState<QuickSolverId>('pythagorean');
 
-  // Global search query
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Cloudflare sync drawer state
-  const [isCloudSyncOpen, setIsCloudSyncOpen] = useState(false);
-
-  // Tools list and discovered subdomains
-  const [toolsList, setToolsList] = useState<ToolItem[]>(INITIAL_TOOLS);
-  const [discoveredSubdomains, setDiscoveredSubdomains] = useState<string[]>([
-    'pythagorean-calculator.formulacalckit.com',
-    'quadratic.formulacalckit.com',
-    'mathbridge.formulacalckit.com',
-  ]);
+  // Search queries for each section
+  const [serverSearchQuery, setServerSearchQuery] = useState('');
 
   // Synchronize document attributes and SEO metadata on language switch
   useEffect(() => {
@@ -83,17 +72,12 @@ export function App() {
     }
   };
 
-  const handleSyncTools = (workerTools: WorkerSubsiteTool[]) => {
-    setDiscoveredSubdomains(workerTools.map((t) => t.domain));
-  };
-
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
       {/* 1-Row 3-Zone Top Navigation Bar */}
       <Header
         lang={lang}
         onToggleLang={handleToggleLang}
-        onOpenCloudSync={() => setIsCloudSyncOpen(true)}
         onScrollToSection={scrollToSection}
       />
 
@@ -109,27 +93,24 @@ export function App() {
           onSelectSolver={setActiveSolverId}
         />
 
-        {/* Unified, Non-Duplicated Formula Directory */}
-        <ToolDirectory
-          tools={toolsList}
+        {/* Data Source 1: Cloudflare Edge Verified Subsites */}
+        <CloudflareToolGrid
           lang={lang}
           onSelectSolver={setActiveSolverId}
-          discoveredSubdomains={discoveredSubdomains}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+        />
+
+        {/* Data Source 2: Server-Hosted Formula Calculators Directory */}
+        <ServerToolGrid
+          initialTools={INITIAL_TOOLS}
+          lang={lang}
+          onSelectSolver={setActiveSolverId}
+          searchQuery={serverSearchQuery}
+          onSearchChange={setServerSearchQuery}
         />
 
         {/* Comprehensive Formula Reference & Mathematical Cheat Sheet */}
         <FormulaCheatSheet lang={lang} onSelectSolver={setActiveSolverId} />
       </main>
-
-      {/* Discrete Cloudflare Edge Drawer (Keeps the main page free of DNS clutter) */}
-      <CloudSyncDrawer
-        isOpen={isCloudSyncOpen}
-        onClose={() => setIsCloudSyncOpen(false)}
-        lang={lang}
-        onSyncTools={handleSyncTools}
-      />
 
       {/* Production-Grade Footer with Legal and Nav Links */}
       <Footer lang={lang} onScrollToSection={scrollToSection} />
