@@ -1,4 +1,5 @@
 export type SupportedLang = 'en' | 'es' | 'fr' | 'pt' | 'zh';
+export type Language = SupportedLang;
 
 export const translations: Record<SupportedLang, Record<string, string>> = {
   en: {
@@ -47,6 +48,8 @@ export const translations: Record<SupportedLang, Record<string, string>> = {
     language: '语言'
   }
 };
+
+export const TRANSLATIONS = translations;
 
 export interface BrowserDetectionResult {
   detected: SupportedLang;

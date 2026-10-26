@@ -12,6 +12,8 @@ import {
   Check,
   RotateCcw,
   Sparkles,
+  Scale,
+  BookOpen,
 } from 'lucide-react';
 
 interface WorkstationProps {
@@ -111,6 +113,45 @@ export const Workstation: React.FC<WorkstationProps> = ({
         {activeSolverId === 'ohms_law' && <PhysicsStudio lang={lang} />}
         {activeSolverId === 'circle' && <CircleSectorStudio lang={lang} />}
         {activeSolverId === 'mathbridge' && <MathBridgeStudio lang={lang} />}
+
+        {/* Academic Authority and Citation Bar */}
+        <div className="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>
+              {lang === 'en'
+                ? 'Calculations adhere to ISO/IEC 80000, NIST SP 811 & symbolic CAS engines.'
+                : '运算推导严格对齐 ISO/IEC 80000 国际计量标准、NIST 指南与符号 CAS 验证体系。'}
+            </span>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <a
+              href="/standards"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/standards');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-blue-600 hover:underline font-semibold"
+            >
+              {lang === 'en' ? 'Standards Matrix →' : '查看标准对照表 →'}
+            </a>
+            <span aria-hidden="true" className="text-slate-300">·</span>
+            <a
+              href="/about"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/about');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-indigo-600 hover:underline font-semibold"
+            >
+              {lang === 'en' ? 'Cite in Thesis (BibTeX) →' : '学术论文引用格式 →'}
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );

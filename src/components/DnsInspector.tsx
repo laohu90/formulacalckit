@@ -142,7 +142,8 @@ export const DnsInspector: React.FC<DnsInspectorProps> = ({
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter((i) => {
-        const text = `${i.site.subdomain} ${i.site.domain} ${i.resolved.title} ${i.resolved.desc} ${i.resolved.category} ${i.resolved.tags.join(' ')}`.toLowerCase();
+        const tagsText = (i.resolved.tags || []).join(' ');
+        const text = `${i.site.subdomain} ${i.site.domain} ${i.resolved.title} ${i.resolved.desc} ${i.resolved.category} ${tagsText}`.toLowerCase();
         return text.includes(q);
       });
     }

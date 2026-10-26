@@ -35,6 +35,7 @@ export interface ToolItem {
   tags: string[];
   isVerifiedSubdomain?: boolean;
   dnsRecordName?: string;
+  standardReference?: string;
 }
 
 export interface WorkerSubsiteTool {
